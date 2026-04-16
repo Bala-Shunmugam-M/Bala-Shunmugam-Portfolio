@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Bala Shunmugam M</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+  /* ═══════════════════════════════════════
+     DESIGN DIRECTION:
+     Industrial editorial — dark gunmetal base,
+     warm amber accent, tight grid, data-rich.
+     Think: engineer's logbook meets design studio.
+  ═══════════════════════════════════════ */
+
+  :root {
+    --ink:        #0f1117;
+    --ink-2:      #1c2030;
+    --ink-3:      #2a2f40;
+    --steel:      #3a4055;
+    --muted:      #6b7280;
+    --ghost:      #9aa0ae;
+    --rule:       #2a2f40;
+    --rule-light: #333849;
+
+    --amber:      #f59e0b;
+    --amber-dim:  #92600a;
+    --amber-glow: rgba(245,158,11,0.12);
+    --amber-ring: rgba(245,158,11,0.25);
+
+    --teal:       #14b8a6;
+    --teal-dim:   rgba(20,184,166,0.12);
+    --blue:       #3b82f6;
+    --blue-dim:   rgba(59,130,246,0.12);
+    --rose:       #f43f5e;
+    --rose-dim:   rgba(244,63,94,0.12);
+    --violet:     #8b5cf6;
+    --violet-dim: rgba(139,92,246,0.12);
+    --green:      #22c55e;
+    --green-dim:  rgba(34,197,94,0.12);
+    --orange:     #f97316;
+    --orange-dim: rgba(249,115,22,0.12);
+
+    --surface:    #161b27;
+    --surface-2:  #1d2235;
+    --surface-3:  #222840;
+
+    --text:       #e2e5ef;
+    --text-2:     #b0b8cc;
+    --text-3:     #6b7280;
+
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-sans:  'Instrument Sans', system-ui, sans-serif;
+    --font-mono:  'JetBrains Mono', monospace;
+
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--ink);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    /* subtle noise texture via SVG data URI */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  a { text-decoration: none; color: inherit; }
+  ul { list-style: none; }
+
+  /* ── NAV ──────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,17,23,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-back {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--ghost);
+    transition: color 0.15s;
+  }
+  .nav-back:hover { color: var(--amber); }
+  .nav-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .nav-title { font-size: 13px; font-weight: 500; color: var(--text-3); }
+  .nav-count {
+    font-size: 11px; font-family: var(--font-mono);
+    color: var(--amber); background: var(--amber-glow);
+    border: 1px solid var(--amber-ring);
+    padding: 2px 8px; border-radius: 100px;
+  }
+
+  /* ── HERO HEADER ──────────────────────── */
+  .page-hero {
+    padding: 72px 32px 64px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .eyebrow-line {
+    width: 32px; height: 1px;
+    background: var(--amber);
+  }
+  .eyebrow-text {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--amber);
+  }
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.08;
+    color: var(--text);
+    margin-bottom: 24px;
+    letter-spacing: -1.5px;
+  }
+  .page-title em {
+    font-style: italic;
+    color: var(--amber);
+  }
+  .page-subtitle {
+    font-size: 16px; color: var(--text-2);
+    max-width: 560px; line-height: 1.75;
+    margin-bottom: 40px;
+  }
+
+  /* ── FILTER BAR ───────────────────────── */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .filter-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    font-family: var(--font-sans);
+    font-size: 12px; font-weight: 500;
+    border-radius: 100px;
+    border: 1px solid var(--rule-light);
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--amber); color: var(--amber); }
+  .filter-btn.active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  .filter-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* ── STATS ROW ────────────────────────── */
+  .stats-row {
+    display: flex; gap: 32px; flex-wrap: wrap;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 48px;
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 2px; }
+  .stat-val {
+    font-family: var(--font-serif);
+    font-size: 28px; color: var(--text);
+    letter-spacing: -1px;
+  }
+  .stat-val span { font-size: 14px; color: var(--amber); font-family: var(--font-mono); }
+  .stat-label { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── MAIN LAYOUT ──────────────────────── */
+  .projects-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* ── PROJECT CARD ─────────────────────── */
+  .project-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-xl);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .project-card:hover {
+    border-color: var(--rule-light);
+    box-shadow: 0 0 0 1px var(--rule-light), 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  /* left accent bar */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--card-accent, var(--amber));
+    border-radius: 3px 0 0 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .project-card:hover::before { opacity: 1; }
+
+  /* ── CARD TOP ─────────────────────────── */
+  .card-top {
+    padding: 28px 28px 24px;
+    cursor: pointer;
+    position: relative;
+  }
+  .card-meta {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .tag-amber  { background: var(--amber-glow);  color: var(--amber);  border: 1px solid var(--amber-ring); }
+  .tag-teal   { background: var(--teal-dim);    color: var(--teal);   border: 1px solid rgba(20,184,166,0.25); }
+  .tag-blue   { background: var(--blue-dim);    color: var(--blue);   border: 1px solid rgba(59,130,246,0.25); }
+  .tag-rose   { background: var(--rose-dim);    color: var(--rose);   border: 1px solid rgba(244,63,94,0.25); }
+  .tag-violet { background: var(--violet-dim);  color: var(--violet); border: 1px solid rgba(139,92,246,0.25); }
+  .tag-green  { background: var(--green-dim);   color: var(--green);  border: 1px solid rgba(34,197,94,0.25); }
+  .tag-orange { background: var(--orange-dim);  color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
+
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-3);
+    margin-left: auto;
+  }
+
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 22px; font-weight: 400;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+  .card-desc {
+    font-size: 14px; color: var(--text-2);
+    line-height: 1.7;
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+
+  /* ── IMPACT CHIPS ─────────────────────── */
+  .impact-strip {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .chip {
+    display: flex; align-items: baseline; gap: 5px;
+    background: var(--surface-2);
+    border: 1px solid var(--rule-light);
+    border-radius: var(--r-sm);
+    padding: 5px 12px;
+    font-size: 12px; color: var(--text-3);
+  }
+  .chip-val {
+    font-family: var(--font-mono);
+    font-size: 13px; font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ── EXPAND TOGGLE ────────────────────── */
+  .expand-row {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .expand-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--rule-light);
+    border-radius: var(--r-sm);
+    color: var(--text-3);
+    font-family: var(--font-sans);
+    font-size: 12px; font-weight: 500;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .expand-btn:hover {
+    background: var(--surface-3);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  .expand-btn svg {
+    width: 12px; height: 12px;
+    stroke: currentColor; fill: none; stroke-width: 2.5;
+    transition: transform 0.25s;
+  }
+  .expand-btn.open svg { transform: rotate(180deg); }
+
+  /* ── CARD DETAIL ──────────────────────── */
+  .card-detail {
+    display: none;
+    border-top: 1px solid var(--rule);
+  }
+  .card-detail.open { display: block; }
+
+  /* tab navigation inside detail */
+  .detail-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--rule);
+    padding: 0 28px;
+    background: var(--surface-2);
+  }
+  .detail-tab {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .detail-tab:hover { color: var(--text-2); }
+  .detail-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  .detail-panels { padding: 28px; }
+  .detail-panel { display: none; }
+  .detail-panel.active { display: block; }
+
+  /* PASI grid */
+  .pasi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .pasi-cell {
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    padding: 20px;
+  }
+  .pasi-label {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pasi-label::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cell-color, var(--amber));
+    flex-shrink: 0;
+  }
+  .pasi-text {
+    font-size: 13px; color: var(--text-2);
+    line-height: 1.7;
+  }
+  .pasi-text strong { color: var(--text); font-weight: 500; }
+
+  /* metrics panel */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .metric-box {
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    padding: 16px;
+  }
+  .metric-name { font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
+  .metric-num {
+    font-family: var(--font-mono);
+    font-size: 22px; font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+  }
+  .metric-unit { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+  /* tools/frameworks panel */
+  .tools-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .tool-pill {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-2);
+    background: var(--surface-3);
+    border: 1px solid var(--rule-light);
+    border-radius: var(--r-sm);
+    padding: 4px 10px;
+  }
+
+  /* inline bar chart */
+  .mini-bar-chart { margin-bottom: 16px; }
+  .mini-bar-chart h4 { font-size: 12px; color: var(--text-3); margin-bottom: 12px; font-weight: 500; }
+  .mbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .mbar-label { font-size: 11px; color: var(--text-3); width: 80px; flex-shrink: 0; font-family: var(--font-mono); }
+  .mbar-track { flex: 1; background: var(--surface-3); border-radius: 3px; height: 8px; overflow: hidden; }
+  .mbar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .mbar-val { font-size: 11px; color: var(--text-3); width: 40px; text-align: right; font-family: var(--font-mono); }
+
+  /* recommendations list */
+  .rec-list { display: flex; flex-direction: column; gap: 10px; }
+  .rec-item {
+    display: flex; gap: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    align-items: flex-start;
+  }
+  .rec-horizon {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .rec-short  { background: var(--green-dim);  color: var(--green); }
+  .rec-medium { background: var(--amber-glow); color: var(--amber); }
+  .rec-long   { background: var(--violet-dim); color: var(--violet); }
+  .rec-text { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+  .rec-text strong { color: var(--text); font-weight: 500; }
+
+  /* key findings list */
+  .findings-list { display: flex; flex-direction: column; gap: 8px; }
+  .finding-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13px; color: var(--text-2); line-height: 1.6;
+  }
+  .finding-bullet {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--amber-glow);
+    border: 1px solid var(--amber-ring);
+    color: var(--amber);
+    font-size: 10px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+    font-family: var(--font-mono);
+  }
+
+  /* SWOT */
+  .swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .swot-cell {
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    padding: 16px;
+  }
+  .swot-label {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .swot-items { display: flex; flex-direction: column; gap: 6px; }
+  .swot-item {
+    font-size: 12px; color: var(--text-2);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .swot-item::before {
+    content: '—';
+    color: var(--text-3);
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  /* data table */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-3);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .data-table td {
+    padding: 10px 12px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface-3); }
+  .data-table td strong { color: var(--text); font-weight: 500; }
+
+  /* ── SECTION DIVIDER ──────────────────── */
+  .section-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 48px 0 32px;
+  }
+  .divider-label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-3);
+    white-space: nowrap;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--rule); }
+
+  /* ── FOOTER ───────────────────────────── */
+  .page-footer {
+    border-top: 1px solid var(--rule);
+    padding: 32px;
+    text-align: center;
+    font-size: 12px; color: var(--text-3);
+  }
+  .page-footer a { color: var(--amber); }
+
+  /* ── ANIMATIONS ───────────────────────── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .page-hero > * { animation: fadeSlideUp 0.5s ease both; }
+  .page-hero .hero-eyebrow { animation-delay: 0s; }
+  .page-hero .page-title   { animation-delay: 0.08s; }
+  .page-hero .page-subtitle{ animation-delay: 0.16s; }
+  .page-hero .filter-bar   { animation-delay: 0.22s; }
+  .page-hero .stats-row    { animation-delay: 0.28s; }
+  .project-card { animation: fadeSlideUp 0.4s ease both; }
+
+  /* ── RESPONSIVE ───────────────────────── */
+  @media (max-width: 720px) {
+    .page-hero, .projects-wrap { padding-left: 20px; padding-right: 20px; }
+    .pasi-grid  { grid-template-columns: 1fr; }
+    .swot-grid  { grid-template-columns: 1fr; }
+    .stats-row  { gap: 20px; }
+    .card-title { font-size: 18px; }
+    .nav { padding: 0 20px; }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--rule-light); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────── -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Portfolio
+  </a>
+  <span class="nav-title">Bala Shunmugam M · Projects</span>
+  <span class="nav-count">06 projects</span>
+</nav>
+
+<!-- ── PAGE HERO ───────────────────────── -->
+<div class="page-hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span class="eyebrow-text">Field Work & Analysis</span>
+  </div>
+  <h1 class="page-title">Real problems.<br><em>Measured solutions.</em></h1>
+  <p class="page-subtitle">
+    Every project here is grounded in actual plant exposure — Agni Steels (steel manufacturing) and
+    Valuthur Gas Turbine Power Station (power generation). Each follows the same discipline:
+    identify the problem, analyse root causes, design a solution, quantify the impact.
+  </p>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="all" onclick="filterProjects(this,'all')">All projects</button>
+    <button class="filter-btn" data-filter="internship" onclick="filterProjects(this,'internship')">
+      <div class="filter-dot" style="background:var(--amber)"></div>Internship
+    </button>
+    <button class="filter-btn" data-filter="mba" onclick="filterProjects(this,'mba')">
+      <div class="filter-dot" style="background:var(--teal)"></div>MBA Study
+    </button>
+    <button class="filter-btn" data-filter="eee" onclick="filterProjects(this,'eee')">
+      <div class="filter-dot" style="background:var(--blue)"></div>EEE
+    </button>
+    <button class="filter-btn" data-filter="lean" onclick="filterProjects(this,'lean')">
+      <div class="filter-dot" style="background:var(--rose)"></div>Lean
+    </button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-val">6 <span>projects</span></div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">2 <span>plants</span></div>
+      <div class="stat-label">Sites studied</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">~20% <span>avg</span></div>
+      <div class="stat-label">Efficiency gain projected</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">10 <span>tools</span></div>
+      <div class="stat-label">OM frameworks applied</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROJECTS ─────────────────────────── -->
+<div class="projects-wrap">
+
+  <!-- ═══════════════════ SECTION 1: POWER GENERATION ═══════════════════ -->
+  <div class="section-divider">
+    <span class="divider-label">01 — Valuthur Gas Turbine Power Station (TANGEDCO)</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ────────────────── PROJECT 1: BE Inplant ────────────────── -->
+  <div class="project-card" style="--card-accent:var(--violet)" data-tags="internship eee">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-meta">
+        <span class="tag tag-violet">B.E. In-Plant Training</span>
+        <span class="tag tag-blue">EEE · Power Systems</span>
+        <span class="tag tag-orange">TANGEDCO · VGTPS</span>
+        <span class="card-num">01 / 06</span>
+      </div>
+      <h2 class="card-title">Performance Analysis & Electrical Systems of a Gas Turbine Power Station</h2>
+      <p class="card-desc">
+        Comprehensive in-plant training at Valuthur Gas Turbine Power Station (VGTPS), Tamil Nadu.
+        Studied Brayton cycle thermodynamics, gas turbine mechanical sub-systems, full electrical
+        protection schemes, and quantified the performance degradation factors that reduce output
+        in coastal Indian conditions — including ambient derating, compressor fouling, and inlet pressure drops.
+      </p>
+      <div class="impact-strip">
+        <div class="chip"><span class="chip-val">0.5–0.7%</span> output loss per °C above ISO</div>
+        <div class="chip"><span class="chip-val">1.42%</span> power loss per 10 mbar inlet drop</div>
+        <div class="chip"><span class="chip-val">2–6%</span> degradation over 24,000 op. hrs</div>
+        <div class="chip"><span class="chip-val">10–20 min</span> start-to-full-load capability</div>
+      </div>
+      <div class="expand-row">
+        <div class="tools-row">
+          <span class="tool-pill">Brayton Cycle Analysis</span>
+          <span class="tool-pill">GE GER-3567H</span>
+          <span class="tool-pill">Protection Scheme Study</span>
+          <span class="tool-pill">Performance Correction Curves</span>
+          <span class="tool-pill">VSM</span>
+        </div>
+        <button class="expand-btn" aria-label="Expand project">
+          Full study
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-detail">
+      <div class="detail-tabs">
+        <div class="detail-tab active" onclick="switchTab(this,'p1-analysis')">Analysis</div>
+        <div class="detail-tab" onclick="switchTab(this,'p1-electrical')">Electrical Systems</div>
+        <div class="detail-tab" onclick="switchTab(this,'p1-performance')">Performance Data</div>
+        <div class="detail-tab" onclick="switchTab(this,'p1-findings')">Key Findings</div>
+      </div>
+      <div class="detail-panels">
+
+        <div class="detail-panel active" id="p1-analysis">
+          <div class="pasi-grid">
+            <div class="pasi-cell" style="--cell-color:var(--rose)">
+              <div class="pasi-label" style="color:var(--rose)">Context</div>
+              <div class="pasi-text">VGTPS is an open-cycle gas turbine (OCGT) peaking station operated by TANGEDCO. Located in coastal Tamil Nadu, it faces high ambient temperatures that directly derate output — the core performance challenge studied during training.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--blue)">
+              <div class="pasi-label" style="color:var(--blue)">Thermodynamic Study</div>
+              <div class="pasi-text">Analysed the Brayton cycle parameters: <strong>pressure ratio (10:1–18:1)</strong> and <strong>firing temperature (980–1350°C)</strong>. Studied the efficiency-vs-specific-output design map from GE performance data to understand cycle optimisation trade-offs for simple vs combined-cycle modes.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--amber)">
+              <div class="pasi-label" style="color:var(--amber)">Degradation Analysis</div>
+              <div class="pasi-text">Identified two classes of degradation: <strong>recoverable</strong> (compressor blade fouling — corrected by water washing) and <strong>non-recoverable</strong> (blade tip clearance growth — only fixed at major overhaul every 24,000 EOH). Cumulative output loss: 2–6% without part replacement.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--green)">
+              <div class="pasi-label" style="color:var(--green)">Improvement Opportunity</div>
+              <div class="pasi-text">Inlet evaporative cooling to recover <strong>4–8% summer output</strong> lost to ambient derating. Steam/water injection for NOx abatement and simultaneous <strong>5% mass-flow power boost</strong>. Online compressor washing protocol to recover 1–3% continuously.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="p1-electrical">
+          <div style="margin-bottom:20px;">
+            <h4 style="font-size:13px;color:var(--text-2);margin-bottom:12px;font-weight:500;">Protection Scheme — VGTPS Switchyard</h4>
+            <table class="data-table">
+              <thead>
+                <tr><th>Protection Function</th><th>Relay Standard</th><th>Protected Element</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Differential (87G)</strong></td><td>Biased diff. with 2nd-harmonic restraint</td><td>Generator</td></tr>
+                <tr><td><strong>Distance (21)</strong></td><td>Mho/Quadrilateral, 3-zone</td><td>Outgoing transmission lines</td></tr>
+                <tr><td><strong>Bus-bar diff. (87B)</strong></td><td>High-impedance differential</td><td>EHV bus-bar</td></tr>
+                <tr><td><strong>Restricted Earth Fault (64REF)</strong></td><td>Low-impedance REF</td><td>Generator transformer neutral</td></tr>
+                <tr><td><strong>Loss of Excitation (40)</strong></td><td>Offset Mho characteristic</td><td>Generator</td></tr>
+                <tr><td><strong>Negative Sequence (46)</strong></td><td>Inverse-time overcurrent</td><td>Generator stator</td></tr>
+                <tr><td><strong>Buchholz (63)</strong></td><td>Gas-actuated relay</td><td>Generator & unit transformers</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="findings-list">
+            <div class="finding-item"><div class="finding-bullet">i</div>Generator is directly coupled at 3000 rpm (2-pole, 50 Hz). Stator water-cooled; rotor hydrogen-cooled for high power density.</div>
+            <div class="finding-item"><div class="finding-bullet">ii</div>Generator transformer steps 11–15.75 kV up to 110/230 kV grid evacuation voltage. Oil-immersed FOFA cooling with Buchholz, WTI, and differential protection.</div>
+            <div class="finding-item"><div class="finding-bullet">iii</div>Auto-reclosing (single-phase and three-phase) and PLCC teleprotection enable rapid fault recovery and remote inter-trip signalling.</div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="p1-performance">
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-name">Simple-cycle efficiency</div>
+              <div class="metric-num" style="color:var(--amber)">30–40<span style="font-size:14px">%</span></div>
+              <div class="metric-unit">Thermal (Brayton)</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Combined-cycle efficiency</div>
+              <div class="metric-num" style="color:var(--teal)">50–60<span style="font-size:14px">%</span></div>
+              <div class="metric-unit">With HRSG + steam turbine</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Ambient derating rate</div>
+              <div class="metric-num" style="color:var(--rose)">0.6<span style="font-size:14px">%/°C</span></div>
+              <div class="metric-unit">Above ISO 15°C baseline</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Inlet filter impact</div>
+              <div class="metric-num" style="color:var(--blue)">1.42<span style="font-size:14px">%</span></div>
+              <div class="metric-unit">Power loss per 10 mbar drop</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Steam injection boost</div>
+              <div class="metric-num" style="color:var(--green)">+5<span style="font-size:14px">%</span></div>
+              <div class="metric-unit">Power per % of airflow</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Compressor share</div>
+              <div class="metric-num" style="color:var(--violet)">50<span style="font-size:14px">%+</span></div>
+              <div class="metric-unit">Of gross output consumed</div>
+            </div>
+          </div>
+          <div class="mini-bar-chart">
+            <h4>Performance factor impact on output (%)</h4>
+            <div class="mbar-row"><div class="mbar-label">Ambient +5°C</div><div class="mbar-track"><div class="mbar-fill" style="width:35%;background:var(--rose)"></div></div><div class="mbar-val">−3%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Inlet filter ΔP</div><div class="mbar-track"><div class="mbar-fill" style="width:20%;background:var(--orange)"></div></div><div class="mbar-val">−1.4%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Blade fouling</div><div class="mbar-track"><div class="mbar-fill" style="width:30%;background:var(--amber)"></div></div><div class="mbar-val">−2%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Steam injection</div><div class="mbar-track"><div class="mbar-fill" style="width:60%;background:var(--green)"></div></div><div class="mbar-val">+5%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Inlet cooling</div><div class="mbar-track"><div class="mbar-fill" style="width:75%;background:var(--teal)"></div></div><div class="mbar-val">+6%</div></div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="p1-findings">
+          <div class="findings-list">
+            <div class="finding-item"><div class="finding-bullet">1</div><span>Coastal Tamil Nadu ambient conditions regularly exceed ISO 15°C baseline by 10–15°C during April–June, causing <strong>5–9% output derating</strong> precisely when peak demand is highest — the double-jeopardy paradox.</span></div>
+            <div class="finding-item"><div class="finding-bullet">2</div><span>Inlet air filtration, while essential for coastal salt/dust protection, introduces a persistent pressure drop. A 10 mbar drop alone accounts for <strong>1.42% power loss and 0.45% heat-rate increase</strong> — quantified against GE GER-3567H correction curves.</span></div>
+            <div class="finding-item"><div class="finding-bullet">3</div><span>Compressor blade fouling is the dominant recoverable degradation mechanism. Online water washing can recover <strong>1–3%</strong> continuously; offline mechanical cleaning required for full restoration.</span></div>
+            <div class="finding-item"><div class="finding-bullet">4</div><span>The HRSG provision at VGTPS represents an untapped opportunity: converting to combined-cycle would raise thermal efficiency from ~35% to ~50–55%, reducing fuel cost per kWh by <strong>25–35%</strong>.</span></div>
+            <div class="finding-item"><div class="finding-bullet">5</div><span>The 10–20 minute start-to-full-load capability is VGTPS's core strategic asset in a renewable-heavy grid — gas turbines provide the fast-response reserve that solar and wind cannot.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────── PROJECT 2: MBA OM Report ────────────────── -->
+  <div class="project-card" style="--card-accent:var(--teal)" data-tags="mba internship">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-meta">
+        <span class="tag tag-teal">MBA · Operations Management</span>
+        <span class="tag tag-green">Field Study</span>
+        <span class="tag tag-orange">TANGEDCO · VGTPS</span>
+        <span class="card-num">02 / 06</span>
+      </div>
+      <h2 class="card-title">Operations Management Analysis of a Gas Turbine Peaking Station</h2>
+      <p class="card-desc">
+        Applied six Operations Management lenses — capacity strategy, Lean process efficiency, maintenance
+        operations (TPM/RCM), fuel supply chain resilience, quality management, and HR workforce operations —
+        to diagnose systemic challenges at VGTPS and produce a structured improvement roadmap with financial
+        justification for each initiative.
+      </p>
+      <div class="impact-strip">
+        <div class="chip"><span class="chip-val">₹1.1–1.6 Cr</span> summer revenue potential</div>
+        <div class="chip"><span class="chip-val">1.5–2.5 yr</span> evap. cooling payback</div>
+        <div class="chip"><span class="chip-val">6 OM lenses</span> applied</div>
+        <div class="chip"><span class="chip-val">3 horizons</span> strategic roadmap</div>
+      </div>
+      <div class="expand-row">
+        <div class="tools-row">
+          <span class="tool-pill">Lean / VSM</span>
+          <span class="tool-pill">TPM</span>
+          <span class="tool-pill">Six Sigma</span>
+          <span class="tool-pill">ABC Analysis</span>
+          <span class="tool-pill">SWOT</span>
+          <span class="tool-pill">ASME PTC-22</span>
+          <span class="tool-pill">OEE</span>
+          <span class="tool-pill">NPV Analysis</span>
+        </div>
+        <button class="expand-btn" aria-label="Expand project">
+          Full study
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-detail">
+      <div class="detail-tabs">
+        <div class="detail-tab active" onclick="switchTab(this,'p2-overview')">OM Diagnosis</div>
+        <div class="detail-tab" onclick="switchTab(this,'p2-swot')">SWOT</div>
+        <div class="detail-tab" onclick="switchTab(this,'p2-maintenance')">Maintenance</div>
+        <div class="detail-tab" onclick="switchTab(this,'p2-roadmap')">Roadmap</div>
+      </div>
+      <div class="detail-panels">
+
+        <div class="detail-panel active" id="p2-overview">
+          <div style="margin-bottom:20px;">
+            <table class="data-table">
+              <thead>
+                <tr><th>OM Dimension</th><th>Current State</th><th>Priority</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Capacity Management</strong></td><td>Reactive; ambient derating not proactively hedged</td><td><span style="color:var(--rose);font-weight:500">High</span></td></tr>
+                <tr><td><strong>Process Efficiency</strong></td><td>~35% simple-cycle; HRSG potential underutilised</td><td><span style="color:var(--rose);font-weight:500">High</span></td></tr>
+                <tr><td><strong>Maintenance Operations</strong></td><td>Time-based primary; limited predictive capability</td><td><span style="color:var(--rose);font-weight:500">High</span></td></tr>
+                <tr><td><strong>Supply Chain (Fuel)</strong></td><td>Single-pipeline dependency; limited buffer stock</td><td><span style="color:var(--amber);font-weight:500">Med–High</span></td></tr>
+                <tr><td><strong>Quality Management</strong></td><td>Performance test-driven; limited ISO 55000 alignment</td><td><span style="color:var(--amber);font-weight:500">Medium</span></td></tr>
+                <tr><td><strong>HR / Workforce</strong></td><td>Technical depth high; management pipeline thin</td><td><span style="color:var(--amber);font-weight:500">Medium</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mini-bar-chart">
+            <h4>Cost structure — VGTPS levelised cost breakdown</h4>
+            <div class="mbar-row"><div class="mbar-label">Fuel</div><div class="mbar-track"><div class="mbar-fill" style="width:68%;background:var(--rose)"></div></div><div class="mbar-val">60–75%</div></div>
+            <div class="mbar-row"><div class="mbar-label">O&M</div><div class="mbar-track"><div class="mbar-fill" style="width:18%;background:var(--amber)"></div></div><div class="mbar-val">15–20%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Capital</div><div class="mbar-track"><div class="mbar-fill" style="width:10%;background:var(--blue)"></div></div><div class="mbar-val">8–12%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Admin</div><div class="mbar-track"><div class="mbar-fill" style="width:4%;background:var(--ghost)"></div></div><div class="mbar-val">3–5%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Auxiliary</div><div class="mbar-track"><div class="mbar-fill" style="width:2%;background:var(--teal)"></div></div><div class="mbar-val">1–3%</div></div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="p2-swot">
+          <div class="swot-grid">
+            <div class="swot-cell">
+              <div class="swot-label" style="color:var(--green)">Strengths</div>
+              <div class="swot-items">
+                <div class="swot-item">Fast start capability (~15 min) — primary competitive asset</div>
+                <div class="swot-item">Dual-fuel readiness (gas + naphtha backup)</div>
+                <div class="swot-item">Experienced operations team with deep plant knowledge</div>
+                <div class="swot-item">Strategic grid location in southern Tamil Nadu</div>
+                <div class="swot-item">High peaking value in renewable-heavy grid future</div>
+              </div>
+            </div>
+            <div class="swot-cell">
+              <div class="swot-label" style="color:var(--rose)">Weaknesses</div>
+              <div class="swot-items">
+                <div class="swot-item">Open-cycle thermal efficiency only 30–40%</div>
+                <div class="swot-item">High ambient derating in summer months (5–15%)</div>
+                <div class="swot-item">Time-based maintenance — limited predictive capability</div>
+                <div class="swot-item">Single GAIL pipeline fuel dependency</div>
+                <div class="swot-item">Limited in-house OEM-level overhaul capability</div>
+              </div>
+            </div>
+            <div class="swot-cell">
+              <div class="swot-label" style="color:var(--blue)">Opportunities</div>
+              <div class="swot-items">
+                <div class="swot-item">HRSG retrofit → combined-cycle (efficiency to ~50%)</div>
+                <div class="swot-item">Inlet cooling → recover 4–8% summer output</div>
+                <div class="swot-item">Ancillary services market (frequency response, spinning reserve)</div>
+                <div class="swot-item">VSD retrofits → 15–30% auxiliary consumption saving</div>
+                <div class="swot-item">Digital twin / IoT predictive maintenance</div>
+              </div>
+            </div>
+            <div class="swot-cell">
+              <div class="swot-label" style="color:var(--amber)">Threats</div>
+              <div class="swot-items">
+                <div class="swot-item">Natural gas price volatility and supply risk</div>
+                <div class="swot-item">Increasing renewables reducing dispatch hours</div>
+                <div class="swot-item">Tightening NOx / CO₂ environmental norms</div>
+                <div class="swot-item">Ageing workforce and knowledge attrition</div>
+                <div class="swot-item">Competition from newer, more efficient peaking assets</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="p2-maintenance">
+          <div style="margin-bottom:20px;">
+            <h4 style="font-size:13px;color:var(--text-2);margin-bottom:12px;font-weight:500;">OEM-Defined Inspection Intervals (GE Heavy-Duty GT)</h4>
+            <table class="data-table">
+              <thead>
+                <tr><th>Inspection Type</th><th>Trigger (EOH)</th><th>Scope</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Combustion Inspection</strong></td><td>~8,000 EOH</td><td>Combustion liners, transition pieces, cross-fire tubes, fuel nozzles</td></tr>
+                <tr><td><strong>Hot Gas Path Inspection</strong></td><td>~24,000 EOH</td><td>Stage-1 & Stage-2 nozzles and buckets — highest temperature components</td></tr>
+                <tr><td><strong>Major Inspection</strong></td><td>~48,000 EOH</td><td>Complete disassembly; all turbine and compressor rotating parts</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-bottom:16px;">
+            <h4 style="font-size:13px;color:var(--text-2);margin-bottom:12px;font-weight:500;">Maintenance Strategy Maturity</h4>
+            <div class="mbar-row"><div class="mbar-label">Breakdown</div><div class="mbar-track"><div class="mbar-fill" style="width:20%;background:var(--rose)"></div></div><div class="mbar-val">Reactive</div></div>
+            <div class="mbar-row"><div class="mbar-label">Preventive</div><div class="mbar-track"><div class="mbar-fill" style="width:90%;background:var(--green)"></div></div><div class="mbar-val">Primary</div></div>
+            <div class="mbar-row"><div class="mbar-label">Condition-based</div><div class="mbar-track"><div class="mbar-fill" style="width:45%;background:var(--amber)"></div></div><div class="mbar-val">Partial</div></div>
+            <div class="mbar-row"><div class="mbar-label">Predictive</div><div class="mbar-track"><div class="mbar-fill" style="width:10%;background:var(--violet)"></div></div><div class="mbar-val">Nascent</div></div>
+          </div>
+          <div class="findings-list">
+            <div class="finding-item"><div class="finding-bullet">↑</div>Implement condition-based maintenance using vibration analytics, lube oil analysis, and thermographic surveys to reduce EFOR by 1–2 percentage points.</div>
+            <div class="finding-item"><div class="finding-bullet">↑</div>Autonomous Maintenance (TPM Pillar 1): train operators on daily walk-rounds and early anomaly detection to reduce emergency callouts.</div>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="p2-roadmap">
+          <div class="rec-list">
+            <div class="rec-item">
+              <span class="rec-horizon rec-short">0–2 yr</span>
+              <div class="rec-text"><strong>Online compressor water washing</strong> — implement protocol triggered by inlet filter ΔP monitoring. Estimated 1–3% continuous power recovery with near-zero capex.</div>
+            </div>
+            <div class="rec-item">
+              <span class="rec-horizon rec-short">0–2 yr</span>
+              <div class="rec-text"><strong>VSD retrofits on auxiliary motors</strong> — variable-speed drives on cooling water pumps, air compressors, ID fans. Payback 3–5 years; 15–30% auxiliary consumption reduction.</div>
+            </div>
+            <div class="rec-item">
+              <span class="rec-horizon rec-short">0–2 yr</span>
+              <div class="rec-text"><strong>EFOR reduction programme</strong> — root-cause analysis for every forced outage; monthly trending of top-5 failure modes; formalised simulator training calendar for DCS operators.</div>
+            </div>
+            <div class="rec-item">
+              <span class="rec-horizon rec-medium">2–5 yr</span>
+              <div class="rec-text"><strong>Inlet evaporative cooling</strong> — recover 4–8% summer output derating. Capital cost ₹1.5–2.5 Cr; additional revenue ₹1.1–1.6 Cr/summer season; payback <strong>1.5–2.5 years</strong>.</div>
+            </div>
+            <div class="rec-item">
+              <span class="rec-horizon rec-medium">2–5 yr</span>
+              <div class="rec-text"><strong>HRSG feasibility study</strong> — model NPV, IRR and payback under projected gas prices and dispatch hours. Combined-cycle conversion would push efficiency from ~35% to ~50–55%.</div>
+            </div>
+            <div class="rec-item">
+              <span class="rec-horizon rec-long">5–10 yr</span>
+              <div class="rec-text"><strong>Combined-cycle conversion (CCPP)</strong> — reduces fuel cost per kWh by 25–35%, improves environmental compliance, and future-proofs plant against carbon pricing.</div>
+            </div>
+            <div class="rec-item">
+              <span class="rec-horizon rec-long">5–10 yr</span>
+              <div class="rec-text"><strong>Hydrogen co-firing readiness</strong> — explore blended H₂ combustion as India's hydrogen economy matures, future-proofing against natural gas supply or carbon price risks.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 2: STEEL MANUFACTURING ═══════════════════ -->
+  <div class="section-divider" style="margin-top:56px;">
+    <span class="divider-label">02 — Agni Steels Internship · Steel Manufacturing</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ────────────────── PROJECT 3: Bottleneck ────────────────── -->
+  <div class="project-card" style="--card-accent:var(--amber)" data-tags="internship">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-meta">
+        <span class="tag tag-amber">Internship · Agni Steels</span>
+        <span class="tag tag-rose">Bottleneck Analysis</span>
+        <span class="card-num">03 / 06</span>
+      </div>
+      <h2 class="card-title">Production Bottleneck Analysis in Steel Manufacturing</h2>
+      <p class="card-desc">
+        Identified and quantified a recurring delay at the cooler stage in a 5-step steel production line
+        (Conveyor → Bunker → Kiln → Cooler → ESP). Cooler downtime accounted for 46% of total daily downtime
+        despite being one of five stages — a clear Pareto concentration warranting targeted intervention.
+      </p>
+      <div class="impact-strip">
+        <div class="chip"><span class="chip-val">12–15%</span> throughput gain estimated</div>
+        <div class="chip"><span class="chip-val">1.1 hrs/day</span> cooler downtime</div>
+        <div class="chip"><span class="chip-val">46%</span> of total downtime at one stage</div>
+        <div class="chip"><span class="chip-val">5-stage</span> process fully mapped</div>
+      </div>
+      <div class="expand-row">
+        <div class="tools-row">
+          <span class="tool-pill">Process Mapping</span>
+          <span class="tool-pill">Pareto Analysis</span>
+          <span class="tool-pill">Root Cause Analysis</span>
+          <span class="tool-pill">Downtime Logging</span>
+        </div>
+        <button class="expand-btn" aria-label="Expand project">
+          Full analysis
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-detail">
+      <div class="detail-tabs">
+        <div class="detail-tab active" onclick="switchTab(this,'p3-pasi')">P → A → S → I</div>
+        <div class="detail-tab" onclick="switchTab(this,'p3-data')">Downtime Data</div>
+      </div>
+      <div class="detail-panels">
+        <div class="detail-panel active" id="p3-pasi">
+          <div class="pasi-grid">
+            <div class="pasi-cell" style="--cell-color:var(--rose)">
+              <div class="pasi-label" style="color:var(--rose)">Problem</div>
+              <div class="pasi-text">Production delays observed at cooler stage — heat retention causing material buildup. Downstream ESP stage sat idle for ~45 min/day waiting on cooler throughput. Daily output: <strong>487 units vs 500-unit target</strong>.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--blue)">
+              <div class="pasi-label" style="color:var(--blue)">Analysis</div>
+              <div class="pasi-text">Process mapped all 5 stages; logged downtime per stage over 4 weeks. Cooler averaged <strong>1.1 hrs/day</strong> downtime — 2.4× the next-worst stage (Kiln at 0.5 hrs). Insufficient airflow and heat dissipation capacity confirmed as root causes.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--amber)">
+              <div class="pasi-label" style="color:var(--amber)">Solution</div>
+              <div class="pasi-text">Add secondary cooling system to increase dissipation capacity. Improve airflow routing to eliminate dead zones causing heat buildup. Schedule preventive maintenance before peak production windows to prevent accumulation.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--green)">
+              <div class="pasi-label" style="color:var(--green)">Impact</div>
+              <div class="pasi-text">Estimated 12–15% cycle time reduction. Downstream ESP idle time reduced by ~45 min/day. Overall production efficiency improvement from <strong>83% → 90% target</strong>. Cooler maintenance interval formalised.</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="p3-data">
+          <div class="mini-bar-chart">
+            <h4>Stage-wise downtime — daily average (hours)</h4>
+            <div class="mbar-row"><div class="mbar-label">Conveyor</div><div class="mbar-track"><div class="mbar-fill" style="width:14%;background:var(--blue)"></div></div><div class="mbar-val">0.3 h</div></div>
+            <div class="mbar-row"><div class="mbar-label">Bunker</div><div class="mbar-track"><div class="mbar-fill" style="width:19%;background:var(--blue)"></div></div><div class="mbar-val">0.4 h</div></div>
+            <div class="mbar-row"><div class="mbar-label">Kiln</div><div class="mbar-track"><div class="mbar-fill" style="width:23%;background:var(--amber)"></div></div><div class="mbar-val">0.5 h</div></div>
+            <div class="mbar-row"><div class="mbar-label">Cooler ⚠</div><div class="mbar-track"><div class="mbar-fill" style="width:51%;background:var(--rose)"></div></div><div class="mbar-val">1.1 h</div></div>
+            <div class="mbar-row"><div class="mbar-label">ESP</div><div class="mbar-track"><div class="mbar-fill" style="width:5%;background:var(--blue)"></div></div><div class="mbar-val">0.1 h</div></div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-name">Daily output</div>
+              <div class="metric-num" style="color:var(--amber)">487</div>
+              <div class="metric-unit">units/day (target: 500)</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Overall efficiency</div>
+              <div class="metric-num" style="color:var(--rose)">83<span style="font-size:14px">%</span></div>
+              <div class="metric-unit">vs 90% target</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Cooler share of downtime</div>
+              <div class="metric-num" style="color:var(--rose)">46<span style="font-size:14px">%</span></div>
+              <div class="metric-unit">of total 2.4 hrs/day</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────── PROJECT 4: Inventory EOQ ────────────────── -->
+  <div class="project-card" style="--card-accent:var(--teal)" data-tags="mba">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-meta">
+        <span class="tag tag-teal">MBA · Operations</span>
+        <span class="tag tag-green">Inventory Optimisation</span>
+        <span class="card-num">04 / 06</span>
+      </div>
+      <h2 class="card-title">Inventory Optimisation Using the EOQ Model</h2>
+      <p class="card-desc">
+        Applied the Economic Order Quantity model to a raw material procurement scenario to resolve
+        a dual-failure mode: excess holding cost eroding margins while simultaneous stockouts
+        were stopping production. Delivered optimal reorder parameters and built a live calculator tool.
+      </p>
+      <div class="impact-strip">
+        <div class="chip"><span class="chip-val">18%</span> holding cost reduction</div>
+        <div class="chip"><span class="chip-val">EOQ</span> formula applied</div>
+        <div class="chip"><span class="chip-val">~0</span> stockout incidents post-intervention</div>
+      </div>
+      <div class="expand-row">
+        <div class="tools-row">
+          <span class="tool-pill">EOQ Model</span>
+          <span class="tool-pill">Safety Stock Calculation</span>
+          <span class="tool-pill">Total Cost Curve Analysis</span>
+          <span class="tool-pill">Reorder Point</span>
+        </div>
+        <button class="expand-btn" aria-label="Expand project">
+          Full analysis
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-detail">
+      <div class="detail-tabs">
+        <div class="detail-tab active" onclick="switchTab(this,'p4-pasi')">P → A → S → I</div>
+      </div>
+      <div class="detail-panels">
+        <div class="detail-panel active" id="p4-pasi">
+          <div class="pasi-grid">
+            <div class="pasi-cell" style="--cell-color:var(--rose)">
+              <div class="pasi-label" style="color:var(--rose)">Problem</div>
+              <div class="pasi-text">Classic over-order / under-order cycle: excess inventory holding cost eating into margins, while simultaneous stockouts caused production stoppages. Neither pure over-stocking nor under-stocking was sustainable.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--blue)">
+              <div class="pasi-label" style="color:var(--blue)">Analysis</div>
+              <div class="pasi-text">Collected annual demand (D), ordering cost (S), and holding cost (H). Plotted total cost curve against order quantity to find the global minimum — the EOQ inflection point.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--amber)">
+              <div class="pasi-label" style="color:var(--amber)">Solution</div>
+              <div class="pasi-text"><strong>Q* = √(2DS/H)</strong> — optimal order quantity. Reorder point set at: ROP = lead-time demand + safety stock buffer calculated from demand variability and target service level.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--green)">
+              <div class="pasi-label" style="color:var(--green)">Impact</div>
+              <div class="pasi-text">18% estimated reduction in annual holding cost. Stockout frequency effectively eliminated by setting science-based reorder level and safety stock. Built live EOQ calculator (in Tools section of portfolio).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────── PROJECT 5: Energy Audit ────────────────── -->
+  <div class="project-card" style="--card-accent:var(--blue)" data-tags="eee internship">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-meta">
+        <span class="tag tag-blue">EEE Advantage</span>
+        <span class="tag tag-amber">Energy Audit</span>
+        <span class="card-num">05 / 06</span>
+      </div>
+      <h2 class="card-title">Motor Energy Efficiency Audit — Industrial Facility</h2>
+      <p class="card-desc">
+        Leveraged EEE knowledge to audit 8 industrial motors in a manufacturing facility. Used
+        clamp meter and power analyser measurements to identify load mismatches — 3 motors running
+        below 40% load, 2 motors overloaded. Proposed targeted VFD installation with a 14-month ROI.
+      </p>
+      <div class="impact-strip">
+        <div class="chip"><span class="chip-val">~20%</span> energy consumption reduction</div>
+        <div class="chip"><span class="chip-val">8</span> motors audited</div>
+        <div class="chip"><span class="chip-val">14 months</span> VFD investment ROI</div>
+        <div class="chip"><span class="chip-val">3 motors</span> running under 40% load</div>
+      </div>
+      <div class="expand-row">
+        <div class="tools-row">
+          <span class="tool-pill">Load Factor Analysis</span>
+          <span class="tool-pill">Clamp Meter / Power Analyser</span>
+          <span class="tool-pill">VFD Sizing</span>
+          <span class="tool-pill">ROI Calculation</span>
+        </div>
+        <button class="expand-btn" aria-label="Expand project">
+          Full analysis
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-detail">
+      <div class="detail-tabs">
+        <div class="detail-tab active" onclick="switchTab(this,'p5-pasi')">P → A → S → I</div>
+      </div>
+      <div class="detail-panels">
+        <div class="detail-panel active" id="p5-pasi">
+          <div class="pasi-grid">
+            <div class="pasi-cell" style="--cell-color:var(--rose)">
+              <div class="pasi-label" style="color:var(--rose)">Problem</div>
+              <div class="pasi-text">High and rising energy bills in facility — suspected motor inefficiency. No prior audit had been conducted. Motors were sized based on peak load assumptions that didn't reflect actual running conditions.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--blue)">
+              <div class="pasi-label" style="color:var(--blue)">Analysis</div>
+              <div class="pasi-text">Measured load factor per motor. Found <strong>3 motors running below 40% load</strong> — a severe inefficiency zone where fixed iron losses dominate. <strong>2 motors overloaded</strong>, running hot and risking premature failure.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--amber)">
+              <div class="pasi-label" style="color:var(--amber)">Solution</div>
+              <div class="pasi-text">Install Variable Frequency Drives (VFDs) on the 3 underloaded motors to match speed to actual demand. Replace the 2 overloaded motors with correctly sized units to eliminate thermal stress and failure risk.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--green)">
+              <div class="pasi-label" style="color:var(--green)">Impact</div>
+              <div class="pasi-text">Projected <strong>~20% reduction</strong> in facility electricity consumption. VFD installation cost recovered in <strong>14 months</strong> based on current energy tariff rates. Motors also run cooler, extending service life.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────── PROJECT 6: Lean ────────────────── -->
+  <div class="project-card" style="--card-accent:var(--rose)" data-tags="lean mba">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-meta">
+        <span class="tag tag-rose">Lean Manufacturing</span>
+        <span class="tag tag-teal">Waste Elimination</span>
+        <span class="card-num">06 / 06</span>
+      </div>
+      <h2 class="card-title">Lean Manufacturing Waste Assessment — Shop Floor</h2>
+      <p class="card-desc">
+        Applied the Lean 7-waste framework and Value Stream Mapping to a shop floor.
+        Identified Waiting (40% of delay), Overproduction, and Defects as the top-3 wastes.
+        Designed a pull-system intervention that reduced lead time by 22% and WIP inventory by 30%.
+      </p>
+      <div class="impact-strip">
+        <div class="chip"><span class="chip-val">22%</span> lead time reduction</div>
+        <div class="chip"><span class="chip-val">30%</span> WIP inventory drop</div>
+        <div class="chip"><span class="chip-val">7 wastes</span> framework applied</div>
+        <div class="chip"><span class="chip-val">VSM</span> created</div>
+      </div>
+      <div class="expand-row">
+        <div class="tools-row">
+          <span class="tool-pill">Value Stream Mapping</span>
+          <span class="tool-pill">Lean 7 Wastes</span>
+          <span class="tool-pill">Kanban / Pull System</span>
+          <span class="tool-pill">Inline QC Design</span>
+        </div>
+        <button class="expand-btn" aria-label="Expand project">
+          Full analysis
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-detail">
+      <div class="detail-tabs">
+        <div class="detail-tab active" onclick="switchTab(this,'p6-pasi')">P → A → S → I</div>
+        <div class="detail-tab" onclick="switchTab(this,'p6-waste')">Waste Breakdown</div>
+      </div>
+      <div class="detail-panels">
+        <div class="detail-panel active" id="p6-pasi">
+          <div class="pasi-grid">
+            <div class="pasi-cell" style="--cell-color:var(--rose)">
+              <div class="pasi-label" style="color:var(--rose)">Problem</div>
+              <div class="pasi-text">Long lead times despite sufficient capacity — non-value-adding activities were inflating cycle time without adding customer value. WIP piling up between stations creating a false sense of activity.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--blue)">
+              <div class="pasi-label" style="color:var(--blue)">Analysis</div>
+              <div class="pasi-text">Value stream map drawn for entire production flow. Top wastes identified: <strong>Waiting — 40% of delay</strong> (upstream stations starving downstream), Overproduction (WIP buildup), Defects (costly late-stage rework loop).</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--amber)">
+              <div class="pasi-label" style="color:var(--amber)">Solution</div>
+              <div class="pasi-text">Introduce <strong>Kanban pull system</strong> to replace push scheduling. Set WIP caps between each station pair. Add inline quality inspection at process mid-point to catch defects before they reach the expensive rework stage.</div>
+            </div>
+            <div class="pasi-cell" style="--cell-color:var(--green)">
+              <div class="pasi-label" style="color:var(--green)">Impact</div>
+              <div class="pasi-text">Lead time reduced by <strong>22%</strong>. WIP inventory dropped by <strong>30%</strong> freeing working capital. Rework rate reduced significantly by shifting defect detection upstream. Pull system stabilised flow.</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="p6-waste">
+          <div class="mini-bar-chart" style="margin-bottom:20px;">
+            <h4>Waste contribution to lead time delay</h4>
+            <div class="mbar-row"><div class="mbar-label">Waiting</div><div class="mbar-track"><div class="mbar-fill" style="width:85%;background:var(--rose)"></div></div><div class="mbar-val">40%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Overproduction</div><div class="mbar-track"><div class="mbar-fill" style="width:55%;background:var(--amber)"></div></div><div class="mbar-val">25%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Defects</div><div class="mbar-track"><div class="mbar-fill" style="width:45%;background:var(--orange)"></div></div><div class="mbar-val">20%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Motion</div><div class="mbar-track"><div class="mbar-fill" style="width:15%;background:var(--blue)"></div></div><div class="mbar-val">7%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Transport</div><div class="mbar-track"><div class="mbar-fill" style="width:10%;background:var(--teal)"></div></div><div class="mbar-val">5%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Inventory</div><div class="mbar-track"><div class="mbar-fill" style="width:5%;background:var(--ghost)"></div></div><div class="mbar-val">2%</div></div>
+            <div class="mbar-row"><div class="mbar-label">Over-processing</div><div class="mbar-track"><div class="mbar-fill" style="width:3%;background:var(--ghost)"></div></div><div class="mbar-val">1%</div></div>
+          </div>
+          <div class="findings-list">
+            <div class="finding-item"><div class="finding-bullet">→</div>Top 3 wastes account for 85% of total delay — confirming Pareto concentration. Kanban and inline QC directly target all three.</div>
+            <div class="finding-item"><div class="finding-bullet">→</div>Pull system eliminates overproduction at source by authorising production only when downstream signals demand — WIP cap enforces this discipline.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end projects-wrap -->
+
+<!-- ── FOOTER ───────────────────────────── -->
+<footer class="page-footer">
+  <p>← <a href="index.html">Back to portfolio</a> &nbsp;·&nbsp; Bala Shunmugam M &nbsp;·&nbsp; EEE + MBA Operations &nbsp;·&nbsp; Tamil Nadu</p>
+</footer>
+
+<script>
+/* ── Toggle card open/close ────────────────── */
+function toggleCard(cardTop) {
+  var detail = cardTop.nextElementSibling;
+  var btn    = cardTop.querySelector('.expand-btn');
+  var isOpen = detail.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.card-detail.open').forEach(function(d) {
+    d.classList.remove('open');
+  });
+  document.querySelectorAll('.expand-btn.open').forEach(function(b) {
+    b.classList.remove('open');
+    b.childNodes[0].textContent = b.childNodes[0].textContent.trim().startsWith('Hide') ? b.getAttribute('data-label') : b.childNodes[0].textContent;
+  });
+
+  if (!isOpen) {
+    detail.classList.add('open');
+    btn.classList.add('open');
+    // smooth scroll to card
+    setTimeout(function() {
+      cardTop.closest('.project-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+  }
+}
+
+/* ── Tab switching inside detail ─────────── */
+function switchTab(tabEl, panelId) {
+  var detailTabs  = tabEl.closest('.detail-tabs');
+  var detailPanels = detailTabs.nextElementSibling;
+
+  detailTabs.querySelectorAll('.detail-tab').forEach(function(t) { t.classList.remove('active'); });
+  detailPanels.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
+
+  tabEl.classList.add('active');
+  var target = document.getElementById(panelId);
+  if (target) target.classList.add('active');
+}
+
+/* ── Filter ──────────────────────────────── */
+function filterProjects(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+
+  document.querySelectorAll('.project-card').forEach(function(card) {
+    if (filter === 'all') {
+      card.style.display = '';
+    } else {
+      var tags = card.getAttribute('data-tags') || '';
+      card.style.display = tags.includes(filter) ? '' : 'none';
+    }
+  });
+}
+
+/* ── Scroll reveal ───────────────────────── */
+var cards = document.querySelectorAll('.project-card');
+cards.forEach(function(card, i) {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(20px)';
+  card.style.transitionDelay = (i * 0.06) + 's';
+  card.style.transition = 'opacity 0.45s ease, transform 0.45s ease, border-color 0.2s, box-shadow 0.2s';
+});
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+cards.forEach(function(card) { observer.observe(card); });
+</script>
+
+</body>
+</html>
