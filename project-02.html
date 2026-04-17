@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>OM Analysis — VGTPS — Bala Shunmugam M</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+  :root {
+    --ink:#0f1117;--ink-2:#1c2030;--ink-3:#2a2f40;--steel:#3a4055;
+    --muted:#6b7280;--ghost:#9aa0ae;--rule:#2a2f40;--rule-light:#333849;
+    --amber:#f59e0b;--amber-dim:#92600a;--amber-glow:rgba(245,158,11,0.12);--amber-ring:rgba(245,158,11,0.25);
+    --teal:#14b8a6;--teal-dim:rgba(20,184,166,0.12);
+    --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.12);
+    --rose:#f43f5e;--rose-dim:rgba(244,63,94,0.12);
+    --violet:#8b5cf6;--violet-dim:rgba(139,92,246,0.12);
+    --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+    --orange:#f97316;--orange-dim:rgba(249,115,22,0.12);
+    --surface:#161b27;--surface-2:#1d2235;--surface-3:#222840;
+    --text:#e2e5ef;--text-2:#b0b8cc;--text-3:#6b7280;
+    --font-serif:'DM Serif Display',Georgia,serif;
+    --font-sans:'DM Sans',system-ui,sans-serif;
+    --font-mono:'DM Mono',monospace;
+    --r-sm:6px;--r-md:10px;--r-lg:16px;--r-xl:24px;
+    --accent:#14b8a6;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-sans);background:var(--ink);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+  a{text-decoration:none;color:inherit;}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(15,17,23,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+  .nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ghost);transition:color .15s;}
+  .nav-back:hover{color:var(--amber);}
+  .nav-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+  .nav-right{display:flex;align-items:center;gap:12px;}
+  .nav-label{font-size:12px;font-family:var(--font-mono);color:var(--text-3);}
+  .nav-badge{font-size:11px;font-family:var(--font-mono);color:var(--accent);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);padding:2px 8px;border-radius:100px;}
+
+  /* HERO */
+  .hero{padding:64px 32px 48px;max-width:1100px;margin:0 auto;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;top:-120px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(245,158,11,0.06) 0%,transparent 70%);pointer-events:none;}
+  .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+  .eyebrow-line{width:32px;height:1px;background:var(--accent);}
+  .eyebrow-text{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;}
+  .hero-title{font-family:var(--font-serif);font-size:clamp(28px,4vw,52px);font-weight:400;color:var(--text);line-height:1.1;letter-spacing:-1px;margin-bottom:20px;max-width:800px;}
+  .hero-desc{font-size:15px;color:var(--text-2);max-width:660px;line-height:1.8;margin-bottom:32px;}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;}
+  .hero-chip{font-family:var(--font-mono);font-size:11px;padding:4px 12px;border-radius:100px;border:1px solid var(--rule-light);color:var(--text-3);background:var(--surface-2);}
+  .hero-chip.accent{color:var(--accent);border-color:rgba(245,158,11,0.3);background:var(--amber-glow);}
+
+  /* IMPACT ROW */
+  .impact-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--rule);}
+  .impact-card{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px 20px;min-width:120px;}
+  .impact-val{font-family:var(--font-mono);font-size:24px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:4px;}
+  .impact-label{font-size:11px;color:var(--text-3);line-height:1.3;}
+
+  /* CONTENT AREA */
+  .content{max-width:1100px;margin:0 auto;padding:0 32px 80px;}
+  .section-block{margin-bottom:48px;}
+  .section-title{font-family:var(--font-serif);font-size:26px;font-weight:400;color:var(--text);margin-bottom:20px;letter-spacing:-.5px;padding-bottom:12px;border-bottom:1px solid var(--rule);}
+  .section-sub{font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .prose{font-size:14px;color:var(--text-2);line-height:1.85;margin-bottom:16px;}
+  .prose strong{color:var(--text);}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--rule);margin-bottom:24px;flex-wrap:wrap;}
+  .tab{font-family:var(--font-mono);font-size:11px;padding:10px 16px;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;letter-spacing:.04em;text-transform:uppercase;}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab:hover{color:var(--text-2);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* PASI GRID */
+  .pasi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+  .pasi-cell{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;border-left:3px solid var(--cell-color,var(--amber));}
+  .pasi-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;font-weight:500;}
+  .pasi-text{font-size:13px;color:var(--text-2);line-height:1.75;}
+  .pasi-text strong{color:var(--text);}
+
+  /* TABLE */
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .data-table th{background:var(--surface-3);color:var(--text-3);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px;text-align:left;border-bottom:1px solid var(--rule);font-weight:500;}
+  .data-table td{padding:10px 12px;border-bottom:1px solid var(--rule);color:var(--text-2);vertical-align:top;}
+  .data-table tr:hover td{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto;margin-bottom:24px;border:1px solid var(--rule);border-radius:var(--r-md);}
+
+  /* METRICS */
+  .metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+  .metric-box{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px 20px;}
+  .metric-name{font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
+  .metric-num{font-family:var(--font-mono);font-size:28px;font-weight:500;color:var(--text);line-height:1;margin-bottom:4px;}
+  .metric-unit{font-size:11px;color:var(--text-3);}
+
+  /* BAR CHART */
+  .bar-chart{margin-bottom:24px;}
+  .bar-chart h4{font-size:12px;color:var(--text-3);margin-bottom:14px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .bar-label{font-size:12px;color:var(--text-2);width:160px;flex-shrink:0;}
+  .bar-track{flex:1;background:var(--surface-3);border-radius:4px;height:8px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;}
+  .bar-val{font-family:var(--font-mono);font-size:11px;color:var(--text-3);width:50px;text-align:right;flex-shrink:0;}
+
+  /* FINDINGS */
+  .findings{display:flex;flex-direction:column;gap:12px;}
+  .finding{display:flex;gap:14px;background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-md);padding:16px;}
+  .finding-num{font-family:var(--font-mono);font-size:13px;color:var(--accent);font-weight:500;flex-shrink:0;width:20px;}
+  .finding-text{font-size:13px;color:var(--text-2);line-height:1.75;}
+  .finding-text strong{color:var(--text);}
+
+  /* SWOT */
+  .swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+  .swot-cell{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;}
+  .swot-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:500;}
+  .swot-item{font-size:12px;color:var(--text-2);padding:5px 0;border-bottom:1px solid var(--rule);line-height:1.5;}
+  .swot-item:last-child{border-bottom:none;}
+
+  /* ROADMAP / RECS */
+  .rec-list{display:flex;flex-direction:column;gap:10px;}
+  .rec-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-md);padding:14px 16px;}
+  .rec-horizon{font-family:var(--font-mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em;}
+  .rec-short{background:rgba(34,197,94,.15);color:var(--green);}
+  .rec-medium{background:rgba(245,158,11,.15);color:var(--amber);}
+  .rec-long{background:rgba(59,130,246,.15);color:var(--blue);}
+  .rec-text{font-size:13px;color:var(--text-2);line-height:1.7;}
+  .rec-text strong{color:var(--text);}
+
+  /* TOOL EMBED */
+  .tool-embed{width:100%;border:none;border-radius:var(--r-xl);overflow:hidden;background:var(--surface);min-height:85vh;display:block;}
+
+  /* FOOTER */
+  .page-footer{background:var(--surface);border-top:1px solid var(--rule);padding:32px;text-align:center;font-size:13px;color:var(--text-3);}
+  .page-footer a{color:var(--amber);}
+
+  /* RESPONSIVE */
+  @media(max-width:720px){
+    .hero,.content{padding-left:20px;padding-right:20px;}
+    .pasi-grid,.swot-grid,.metrics-grid{grid-template-columns:1fr;}
+    .hero-title{font-size:26px;}
+    .nav{padding:0 20px;}
+  }
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-track{background:var(--ink);}
+  ::-webkit-scrollbar-thumb{background:var(--rule-light);border-radius:3px;}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="projects.html" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    ← All Projects
+  </a>
+  <div class="nav-right">
+    <span class="nav-label">Bala Shunmugam M</span>
+    <span class="nav-badge">02 / 07</span>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text">MBA · Operations Management · Field Study</div></div>
+  <h1 class="hero-title">Operations Management Analysis of a Gas Turbine Peaking Station</h1>
+  <p class="hero-desc">Applied six Operations Management lenses — capacity strategy, Lean process efficiency, maintenance operations (TPM/RCM), fuel supply chain resilience, quality management, and HR workforce operations — to diagnose systemic challenges at VGTPS and produce a structured improvement roadmap with financial justification.</p>
+  <div class="hero-chips">
+    <span class="hero-chip accent">MBA Operations Management</span>
+    <span class="hero-chip">Lean / VSM</span>
+    <span class="hero-chip">TPM</span>
+    <span class="hero-chip">Six Sigma</span>
+    <span class="hero-chip">SWOT</span>
+    <span class="hero-chip">OEE</span>
+    <span class="hero-chip">NPV Analysis</span>
+  </div>
+  <div class="impact-row">
+    <div class="impact-card"><div class="impact-val">₹1.1–1.6 Cr</div><div class="impact-label">Summer revenue potential from inlet cooling</div></div>
+    <div class="impact-card"><div class="impact-val">1.5–2.5 yr</div><div class="impact-label">Evap. cooling payback period</div></div>
+    <div class="impact-card"><div class="impact-val">6</div><div class="impact-label">OM lenses applied</div></div>
+    <div class="impact-card"><div class="impact-val">3 horizons</div><div class="impact-label">Strategic roadmap (0–2, 2–5, 5–10 yr)</div></div>
+    <div class="impact-card"><div class="impact-val">60–75%</div><div class="impact-label">Fuel share of variable operating cost</div></div>
+  </div>
+</section>
+
+<div class="content">
+  <div class="section-block">
+    <div class="section-sub">Operations Management Framework</div>
+    <div class="section-title">6-Dimension Diagnosis &amp; Roadmap</div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'p2-overview')">OM Diagnosis</div>
+      <div class="tab" onclick="switchTab(this,'p2-capacity')">Capacity Strategy</div>
+      <div class="tab" onclick="switchTab(this,'p2-swot')">SWOT Analysis</div>
+      <div class="tab" onclick="switchTab(this,'p2-maintenance')">Maintenance Ops</div>
+      <div class="tab" onclick="switchTab(this,'p2-supply')">Supply Chain</div>
+      <div class="tab" onclick="switchTab(this,'p2-roadmap')">Improvement Roadmap</div>
+    </div>
+
+    <div id="p2-overview" class="tab-panel active">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>OM Dimension</th><th>Current State</th><th>Key Gap</th><th>Priority</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Capacity Management</strong></td><td>Reactive; ambient derating not proactively hedged</td><td>5–15% output lost in summer peak</td><td style="color:var(--rose);font-weight:600">High</td></tr>
+            <tr><td><strong>Process Efficiency</strong></td><td>~35% simple-cycle; HRSG potential underutilised</td><td>25–35% fuel cost reduction possible</td><td style="color:var(--rose);font-weight:600">High</td></tr>
+            <tr><td><strong>Maintenance Operations</strong></td><td>Time-based primary; limited predictive capability</td><td>EFOR reducible by 1–2 pp with CBM</td><td style="color:var(--rose);font-weight:600">High</td></tr>
+            <tr><td><strong>Supply Chain (Fuel)</strong></td><td>Single-pipeline dependency; 48-hr naphtha buffer</td><td>Concentration risk unhedged</td><td style="color:var(--amber);font-weight:600">Med–High</td></tr>
+            <tr><td><strong>Quality Management</strong></td><td>Performance test-driven; limited ISO 55000 alignment</td><td>No formal asset mgmt. system</td><td style="color:var(--amber);font-weight:600">Medium</td></tr>
+            <tr><td><strong>HR / Workforce</strong></td><td>Technical depth high; management pipeline thin</td><td>Knowledge attrition risk at retirement</td><td style="color:var(--amber);font-weight:600">Medium</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bar-chart">
+        <h4>VGTPS levelised cost structure</h4>
+        <div class="bar-row"><div class="bar-label">Fuel (natural gas)</div><div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--rose)"></div></div><div class="bar-val">60–75%</div></div>
+        <div class="bar-row"><div class="bar-label">Operations &amp; Maintenance</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--amber)"></div></div><div class="bar-val">15–20%</div></div>
+        <div class="bar-row"><div class="bar-label">Capital / Depreciation</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--blue)"></div></div><div class="bar-val">8–12%</div></div>
+        <div class="bar-row"><div class="bar-label">Auxiliary consumption</div><div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--teal)"></div></div><div class="bar-val">1–3%</div></div>
+        <div class="bar-row"><div class="bar-label">Administration</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--ghost)"></div></div><div class="bar-val">3–5%</div></div>
+      </div>
+    </div>
+
+    <div id="p2-capacity" class="tab-panel">
+      <div class="pasi-grid">
+        <div class="pasi-cell" style="--cell-color:var(--rose)">
+          <div class="pasi-label" style="color:var(--rose)">The Peak Paradox</div>
+          <div class="pasi-text">Tamil Nadu peak demand occurs in April–June when ambient temperatures are highest. Gas turbines are air-breathing: <strong>each 1°C above ISO 15°C baseline = 0.6% output loss</strong>. At +15°C ambient, the plant is already running 9% below nameplate when the grid needs it most.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--blue)">
+          <div class="pasi-label" style="color:var(--blue)">Capacity Metrics</div>
+          <div class="pasi-text">Key metrics for peaking plants: <strong>Equivalent Forced Outage Rate (EFOR)</strong> — percentage of time unavailable due to unplanned outage; <strong>Availability Factor</strong> — fraction of time able to generate; <strong>Capacity Factor</strong> — actual vs maximum possible output (low for peaking units, by design).</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--amber)">
+          <div class="pasi-label" style="color:var(--amber)">Operations Interventions</div>
+          <div class="pasi-text">1. <strong>Inlet evaporative cooling</strong> — recovers 4–8% summer derating. 2. <strong>Steam/water injection</strong> — augments mass flow, boosts power during peaks. 3. <strong>Peak rating</strong> — elevated firing temperature at cost of shorter inspection intervals. 4. <strong>Zero planned outages April–June</strong> — proactive maintenance scheduling.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--green)">
+          <div class="pasi-label" style="color:var(--green)">Financial Opportunity</div>
+          <div class="pasi-text">Inlet cooling capital cost: ₹1.5–2.5 Cr. Additional summer revenue from recovered output: <strong>₹1.1–1.6 Cr per summer season</strong>. Simple payback: <strong>1.5–2.5 years</strong>. NPV positive at any reasonable discount rate given 20+ year plant life.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p2-swot" class="tab-panel">
+      <div class="swot-grid">
+        <div class="swot-cell">
+          <div class="swot-label" style="color:var(--green)">Strengths</div>
+          <div class="swot-item">Fast start capability (~15 min) — primary competitive asset</div>
+          <div class="swot-item">Dual-fuel readiness (gas + naphtha backup)</div>
+          <div class="swot-item">Experienced operations team with deep plant knowledge</div>
+          <div class="swot-item">Strategic grid location in southern Tamil Nadu</div>
+          <div class="swot-item">High peaking value in renewable-heavy grid future</div>
+        </div>
+        <div class="swot-cell">
+          <div class="swot-label" style="color:var(--rose)">Weaknesses</div>
+          <div class="swot-item">Open-cycle thermal efficiency only 30–40%</div>
+          <div class="swot-item">High ambient derating in summer months (5–15%)</div>
+          <div class="swot-item">Time-based maintenance — limited predictive capability</div>
+          <div class="swot-item">Single GAIL pipeline fuel dependency</div>
+          <div class="swot-item">Limited in-house OEM-level overhaul capability</div>
+        </div>
+        <div class="swot-cell">
+          <div class="swot-label" style="color:var(--blue)">Opportunities</div>
+          <div class="swot-item">HRSG retrofit → combined-cycle (efficiency to ~50%)</div>
+          <div class="swot-item">Inlet cooling → recover 4–8% summer output</div>
+          <div class="swot-item">Ancillary services market (frequency response, spinning reserve)</div>
+          <div class="swot-item">VSD retrofits → 15–30% auxiliary consumption saving</div>
+          <div class="swot-item">Digital twin / IoT predictive maintenance</div>
+        </div>
+        <div class="swot-cell">
+          <div class="swot-label" style="color:var(--amber)">Threats</div>
+          <div class="swot-item">Natural gas price volatility and supply risk</div>
+          <div class="swot-item">Increasing renewables reducing dispatch hours</div>
+          <div class="swot-item">Tightening NOx / CO₂ environmental norms</div>
+          <div class="swot-item">Ageing workforce and knowledge attrition</div>
+          <div class="swot-item">Competition from newer, more efficient peaking assets</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p2-maintenance" class="tab-panel">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Inspection Type</th><th>Trigger (EOH)</th><th>Scope</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Combustion Inspection</strong></td><td>~8,000 EOH</td><td>Combustion liners, transition pieces, cross-fire tubes, fuel nozzles</td></tr>
+            <tr><td><strong>Hot Gas Path (HGP)</strong></td><td>~24,000 EOH</td><td>Stage-1 &amp; Stage-2 nozzles and buckets — highest temperature components</td></tr>
+            <tr><td><strong>Major Inspection</strong></td><td>~48,000 EOH</td><td>Complete disassembly; all turbine and compressor rotating parts</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bar-chart">
+        <h4>Maintenance strategy maturity at VGTPS</h4>
+        <div class="bar-row"><div class="bar-label">Breakdown (reactive)</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--rose)"></div></div><div class="bar-val">Minor role</div></div>
+        <div class="bar-row"><div class="bar-label">Preventive (OEM schedule)</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--green)"></div></div><div class="bar-val">Primary</div></div>
+        <div class="bar-row"><div class="bar-label">Condition-based</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--amber)"></div></div><div class="bar-val">Partial</div></div>
+        <div class="bar-row"><div class="bar-label">Predictive (IoT/ML)</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--violet)"></div></div><div class="bar-val">Nascent</div></div>
+      </div>
+      <div class="findings">
+        <div class="finding"><div class="finding-num">→</div><div class="finding-text">Implement <strong>condition-based monitoring</strong> using vibration analytics, lube oil spectrometry, and thermographic surveys to detect faults before forced outage — target EFOR reduction of 1–2 percentage points.</div></div>
+        <div class="finding"><div class="finding-num">→</div><div class="finding-text"><strong>TPM Pillar 1 (Autonomous Maintenance):</strong> Train operators on daily walk-rounds and early anomaly detection to reduce emergency callouts and unplanned stoppages.</div></div>
+        <div class="finding"><div class="finding-num">→</div><div class="finding-text">Note: Peak rating and fuel-type changes <strong>accelerate equivalent operating hours (EOH)</strong> relative to calendar hours — must be tracked to avoid premature component failure.</div></div>
+      </div>
+    </div>
+
+    <div id="p2-supply" class="tab-panel">
+      <div class="pasi-grid">
+        <div class="pasi-cell" style="--cell-color:var(--rose)">
+          <div class="pasi-label" style="color:var(--rose)">Fuel Supply Risk</div>
+          <div class="pasi-text"><strong>Single-pipeline dependency:</strong> GAIL pipeline is the sole natural gas feed. Any infrastructure disruption causes immediate dispatch unavailability. No above-ground gas storage. 48-hour naphtha buffer stock is the only hedge.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--amber)">
+          <div class="pasi-label" style="color:var(--amber)">Price Volatility</div>
+          <div class="pasi-text">Natural gas prices linked to international LNG spot markets and long-term contracted rates. Unhedged fuel cost exposure impacts plant economics directly — <strong>fuel = 60–75% of variable cost</strong>. Wobbe Index variations in pipeline gas require combustor tuning adjustments.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--blue)">
+          <div class="pasi-label" style="color:var(--blue)">Spare Parts Tension</div>
+          <div class="pasi-text">Classic OM tension: <strong>holding costs</strong> (expensive slow-moving GT spares tie up capital) vs <strong>stockout costs</strong> (a missing Stage-1 bucket delays a 48,000 EOH major inspection). OEM lead times of 6–18 months make this especially acute for critical rotating parts.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--green)">
+          <div class="pasi-label" style="color:var(--green)">Mitigation Strategy</div>
+          <div class="pasi-text">Minimum 48-hour naphtha buffer + dual-fuel readiness protocol (regular pilot runs on naphtha). Spare parts: ABC-classify all GT spares; maintain critical A-items in-house; use regional pool agreements for B-items; rely on OEM ordering for C-items.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p2-roadmap" class="tab-panel">
+      <div class="rec-list">
+        <div class="rec-item"><span class="rec-horizon rec-short">0–2 yr</span><div class="rec-text"><strong>Online compressor water washing</strong> — protocol triggered by inlet filter ΔP monitoring. 1–3% continuous power recovery, near-zero capex.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-short">0–2 yr</span><div class="rec-text"><strong>VSD retrofits on auxiliary motors</strong> — cooling water pumps, air compressors, ID fans. Payback 3–5 years; 15–30% auxiliary consumption reduction.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-short">0–2 yr</span><div class="rec-text"><strong>EFOR reduction programme</strong> — root-cause analysis for every forced outage; monthly trending of top-5 failure modes; formalised simulator training calendar for DCS operators.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-medium">2–5 yr</span><div class="rec-text"><strong>Inlet evaporative cooling</strong> — recover 4–8% summer output derating. Capital ₹1.5–2.5 Cr; additional revenue ₹1.1–1.6 Cr/summer; payback <strong>1.5–2.5 years</strong>.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-medium">2–5 yr</span><div class="rec-text"><strong>HRSG feasibility study</strong> — model NPV, IRR and payback under projected gas prices and dispatch hours. Combined-cycle pushes efficiency from ~35% to ~50–55%.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-medium">2–5 yr</span><div class="rec-text"><strong>Predictive maintenance pilot</strong> — vibration analytics and lube oil spectrometry on 2–3 critical rotating assets to demonstrate EFOR improvement before fleet rollout.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-long">5–10 yr</span><div class="rec-text"><strong>Combined-cycle conversion (CCPP)</strong> — reduces fuel cost per kWh by 25–35%, improves environmental compliance, future-proofs plant against carbon pricing.</div></div>
+        <div class="rec-item"><span class="rec-horizon rec-long">5–10 yr</span><div class="rec-text"><strong>Hydrogen co-firing readiness</strong> — explore blended H₂ combustion as India's hydrogen economy matures, reducing natural gas dependency and carbon exposure.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<footer class="page-footer">
+  <p>Bala Shunmugam M · MBA Operations · <a href="projects.html">← All Projects</a> · <a href="index.html">Portfolio</a></p>
+</footer>
+
+<script>
+function switchTab(el, panelId) {
+  const container = el.closest('.tabs').parentElement;
+  container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const panel = container.querySelector('#' + panelId);
+  if (panel) panel.classList.add('active');
+}
+</script>
+</body>
+</html>

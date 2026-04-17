@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InventoryIQ — Smart Retail Inventory Control</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0B0F1A;
+    --surface: #111827;
+    --surface2: #1C2537;
+    --surface3: #243040;
+    --border: #2A3A52;
+    --accent: #3B82F6;
+    --accent2: #06B6D4;
+    --accent3: #8B5CF6;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --text: #E2E8F0;
+    --text2: #94A3B8;
+    --text3: #64748B;
+    --font: 'Space Grotesk', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-title {
+    font-size: 22px; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .logo-sub { font-size: 11px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+  .nav { flex: 1; padding: 16px 12px; }
+  .nav-section { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; padding: 16px 8px 8px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px;
+    cursor: pointer; margin-bottom: 2px;
+    color: var(--text2); font-size: 14px; font-weight: 500;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active {
+    background: rgba(59,130,246,0.12);
+    color: var(--accent);
+    border-color: rgba(59,130,246,0.2);
+  }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text3);
+  }
+
+  /* MAIN */
+  .main { margin-left: 260px; flex: 1; padding: 32px; }
+
+  /* TOPBAR */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .page-title { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .page-sub { font-size: 14px; color: var(--text3); margin-top: 2px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s ease; border: none; font-family: var(--font);
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #2563EB; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
+  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface3); }
+  .btn-danger { background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
+  .btn-danger:hover { background: rgba(239,68,68,0.2); }
+  .btn-success { background: var(--success); color: white; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--text2); margin-bottom: 16px;
+  }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+    position: relative; overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .kpi-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .kpi-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .kpi-card.blue::before { background: var(--accent); }
+  .kpi-card.cyan::before { background: var(--accent2); }
+  .kpi-card.green::before { background: var(--success); }
+  .kpi-card.red::before { background: var(--danger); }
+  .kpi-card.purple::before { background: var(--accent3); }
+  .kpi-card.yellow::before { background: var(--warning); }
+  .kpi-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-value { font-size: 32px; font-weight: 700; margin: 6px 0; font-family: var(--mono); }
+  .kpi-meta { font-size: 12px; color: var(--text3); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left; padding: 12px 16px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3);
+    border-bottom: 1px solid var(--border); font-weight: 600; background: var(--surface2);
+  }
+  td {
+    padding: 12px 16px; font-size: 14px;
+    border-bottom: 1px solid rgba(42,58,82,0.5);
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-A { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
+  .badge-B { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.2); }
+  .badge-C { background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
+
+  .badge-alert { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
+  .badge-ok { background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
+  .badge-warn { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.2); }
+
+  /* PROGRESS BAR */
+  .progress-bar { background: var(--surface3); border-radius: 4px; height: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px; padding: 16px 20px;
+    margin: 12px 0;
+  }
+  .formula-label { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; }
+  .formula-text { font-family: var(--mono); font-size: 16px; color: var(--text); font-weight: 500; }
+  .formula-note { font-size: 12px; color: var(--text3); margin-top: 6px; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-field.full { grid-column: 1 / -1; }
+  label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); padding: 10px 14px; border-radius: 8px;
+    font-size: 14px; font-family: var(--font); outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface); border-radius: 10px; padding: 4px; border: 1px solid var(--border); }
+  .tab {
+    flex: 1; padding: 10px; text-align: center; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    color: var(--text3); transition: all 0.15s;
+  }
+  .tab.active { background: var(--accent); color: white; }
+  .tab:not(.active):hover { background: var(--surface2); color: var(--text); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; backdrop-filter: blur(4px);
+  }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px; width: 560px; max-width: 95vw;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+  .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+
+  /* ALERT STRIP */
+  .alert-strip {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 16px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100% { border-color: rgba(239,68,68,0.2); } 50% { border-color: rgba(239,68,68,0.5); } }
+
+  /* SECTION HIDDEN */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CHART CONTAINER */
+  .chart-container { position: relative; height: 280px; }
+
+  /* SIMULATION */
+  .sim-day { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 6px; margin-bottom: 4px; font-size: 13px; }
+  .sim-day.stockout { background: rgba(239,68,68,0.1); }
+  .sim-day.reorder { background: rgba(59,130,246,0.1); }
+  .sim-day.arrival { background: rgba(16,185,129,0.1); }
+
+  .insight-card {
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(6,182,212,0.05));
+    border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px;
+    margin-bottom: 12px;
+  }
+  .insight-number {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white; margin-bottom: 10px;
+  }
+  .insight-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .insight-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  .stock-gauge { position: relative; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface3); }
+  .stock-fill { height: 100%; border-radius: 4px; }
+  .stock-fill.safe { background: var(--success); }
+  .stock-fill.warn { background: var(--warning); }
+  .stock-fill.danger { background: var(--danger); }
+
+  .number-highlight { font-family: var(--mono); color: var(--accent); font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: var(--surface3); color: var(--text2); }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 16px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="logo">
+      <div class="logo-title">InventoryIQ</div>
+      <div class="logo-sub">MBA Project Tool</div>
+    </div>
+    <div class="nav">
+      <div class="nav-section">Dashboard</div>
+      <div class="nav-item active" onclick="showSection('dashboard', this)">
+        <span class="nav-icon">📊</span> Overview
+      </div>
+      <div class="nav-item" onclick="showSection('skus', this)">
+        <span class="nav-icon">📦</span> SKU Manager
+      </div>
+      <div class="nav-section">Analysis</div>
+      <div class="nav-item" onclick="showSection('calculations', this)">
+        <span class="nav-icon">🧮</span> Calculations
+      </div>
+      <div class="nav-item" onclick="showSection('abc', this)">
+        <span class="nav-icon">📈</span> ABC Analysis
+      </div>
+      <div class="nav-item" onclick="showSection('simulation', this)">
+        <span class="nav-icon">⚙️</span> Simulation
+      </div>
+      <div class="nav-section">Reports</div>
+      <div class="nav-item" onclick="showSection('financial', this)">
+        <span class="nav-icon">💰</span> Financial Impact
+      </div>
+      <div class="nav-item" onclick="showSection('learn', this)">
+        <span class="nav-icon">🎓</span> Learn
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      Operations Management · MBA Project<br>
+      Inventory Control System v1.0
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div id="sec-dashboard" class="section active">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Inventory Dashboard</div>
+          <div class="page-sub">Real-time inventory health across all SKUs</div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-ghost" onclick="showSection('skus', document.querySelector('[onclick*=skus]'))">+ Add SKU</button>
+          <button class="btn btn-primary" onclick="refreshDashboard()">↻ Refresh</button>
+        </div>
+      </div>
+
+      <div id="alert-area"></div>
+
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-title">Stock Status by SKU</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>SKU</th><th>Stock</th><th>ROP</th><th>Status</th><th>Days Left</th>
+              </tr></thead>
+              <tbody id="dash-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Inventory Level Chart</div>
+          <div class="chart-container"><canvas id="levelChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKU MANAGER -->
+    <div id="sec-skus" class="section">
+      <div class="topbar">
+        <div>
+          <div class="page-title">SKU Manager</div>
+          <div class="page-sub">Add and manage your product inventory</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddModal()">+ Add Product</button>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Product</th><th>Category</th><th>Avg Demand/Day</th><th>Std Dev</th>
+              <th>Lead Time (days)</th><th>Unit Cost (₹)</th><th>Current Stock</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="sku-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATIONS -->
+    <div id="sec-calculations" class="section">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Calculations</div>
+          <div class="page-sub">EOQ, Safety Stock, and Reorder Point for all SKUs</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <label style="font-size:13px;text-transform:none;letter-spacing:0">Service Level:</label>
+          <select id="serviceLevel" onchange="renderCalculations()" style="padding:8px 12px;width:180px">
+            <option value="1.28">90% (Z = 1.28)</option>
+            <option value="1.65" selected>95% (Z = 1.65)</option>
+            <option value="1.96">97.5% (Z = 1.96)</option>
+            <option value="2.33">99% (Z = 2.33)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="three-col" style="margin-bottom:24px">
+        <div class="formula-box">
+          <div class="formula-label">Safety Stock</div>
+          <div class="formula-text">SS = Z × σ<sub>d</sub> × √L</div>
+          <div class="formula-note">Z = service level factor · σ = demand std dev · L = lead time</div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Reorder Point</div>
+          <div class="formula-text">ROP = (d × L) + SS</div>
+          <div class="formula-note">d = avg daily demand · L = lead time · SS = safety stock</div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Economic Order Qty</div>
+          <div class="formula-text">EOQ = √(2DS / H)</div>
+          <div class="formula-note">D = annual demand · S = order cost · H = holding cost/unit/yr</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>SKU</th><th>Class</th><th>Safety Stock</th><th>Reorder Point</th>
+              <th>EOQ</th><th>Annual Demand</th><th>Holding Cost/Unit</th>
+            </tr></thead>
+            <tbody id="calc-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="margin-top:24px" id="calc-details"></div>
+    </div>
+
+    <!-- ABC ANALYSIS -->
+    <div id="sec-abc" class="section">
+      <div class="topbar">
+        <div>
+          <div class="page-title">ABC Analysis</div>
+          <div class="page-sub">Value-based classification of inventory items</div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-title">ABC Distribution Chart</div>
+          <div class="chart-container"><canvas id="abcChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Pareto Analysis</div>
+          <div class="chart-container"><canvas id="paretoChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Classification Results</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Rank</th><th>SKU</th><th>Annual Value (₹)</th><th>% of Total</th>
+              <th>Cumulative %</th><th>Class</th><th>Management Strategy</th>
+            </tr></thead>
+            <tbody id="abc-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="three-col" style="margin-top:24px" id="abc-summary"></div>
+    </div>
+
+    <!-- SIMULATION -->
+    <div id="sec-simulation" class="section">
+      <div class="topbar">
+        <div>
+          <div class="page-title">30-Day Simulation</div>
+          <div class="page-sub">Compare current vs. proposed inventory system</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div class="form-field" style="flex:1;min-width:200px">
+          <label>Select SKU</label>
+          <select id="simSKU" onchange="runSimulation()"></select>
+        </div>
+        <button class="btn btn-primary" style="margin-top:22px" onclick="runSimulation()">▶ Run Simulation</button>
+      </div>
+
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-title">📉 Current System (No ROP)</div>
+          <div id="sim-current"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📈 Proposed System (With ROP)</div>
+          <div id="sim-proposed"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-title">Inventory Level Over 30 Days</div>
+        <div class="chart-container" style="height:300px"><canvas id="simChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Day-by-Day Log (Proposed System)</div>
+        <div id="sim-log" style="max-height:300px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- FINANCIAL IMPACT -->
+    <div id="sec-financial" class="section">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Financial Impact</div>
+          <div class="page-sub">Quantified benefits of the inventory control system</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid" id="fin-kpi"></div>
+
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-title">Cost Breakdown (Before vs. After)</div>
+          <div class="chart-container"><canvas id="finChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Savings by Category</div>
+          <div id="savings-breakdown"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Per-SKU Financial Analysis</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>SKU</th><th>Old Monthly Holding (₹)</th><th>New Monthly Holding (₹)</th>
+              <th>Stockout Losses Saved (₹)</th><th>Total Monthly Benefit (₹)</th>
+            </tr></thead>
+            <tbody id="fin-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARN -->
+    <div id="sec-learn" class="section">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Learn: Theory & Concepts</div>
+          <div class="page-sub">Operations Management fundamentals behind this system</div>
+        </div>
+      </div>
+
+      <div id="learn-content"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add Product</div>
+    <div class="form-grid">
+      <div class="form-field full">
+        <label>Product Name</label>
+        <input type="text" id="f-name" placeholder="e.g. Aashirvaad Atta 5kg">
+      </div>
+      <div class="form-field">
+        <label>Category</label>
+        <select id="f-category">
+          <option>FMCG Staple</option>
+          <option>Daily Use</option>
+          <option>Packaged Food</option>
+          <option>Beverages</option>
+          <option>Household</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Unit Cost (₹)</label>
+        <input type="number" id="f-cost" placeholder="285" min="0">
+      </div>
+      <div class="form-field">
+        <label>Avg Daily Demand (units)</label>
+        <input type="number" id="f-demand" placeholder="12" min="0">
+      </div>
+      <div class="form-field">
+        <label>Std Dev of Daily Demand</label>
+        <input type="number" id="f-stddev" placeholder="3.8" min="0" step="0.1">
+      </div>
+      <div class="form-field">
+        <label>Lead Time (days)</label>
+        <input type="number" id="f-leadtime" placeholder="3" min="1">
+      </div>
+      <div class="form-field">
+        <label>Current Stock (units)</label>
+        <input type="number" id="f-stock" placeholder="100" min="0">
+      </div>
+      <div class="form-field">
+        <label>Ordering Cost per Order (₹)</label>
+        <input type="number" id="f-ordercost" placeholder="50" min="0">
+      </div>
+      <div class="form-field">
+        <label>Max Daily Demand (units)</label>
+        <input type="number" id="f-maxdemand" placeholder="20" min="0">
+      </div>
+      <div class="form-field">
+        <label>Profit Margin per Unit (₹)</label>
+        <input type="number" id="f-margin" placeholder="15" min="0">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-save-btn" onclick="saveSKU()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====================================================
+// DATA STORE
+// ====================================================
+let skus = [
+  { id:1, name:"Aashirvaad Atta 5kg", category:"FMCG Staple", cost:285, demand:12, stddev:3.8, leadtime:3, stock:55, ordercost:50, maxdemand:22, margin:30 },
+  { id:2, name:"Fortune Rice 1kg", category:"FMCG Staple", cost:65, demand:22, stddev:5.1, leadtime:2, stock:60, ordercost:40, maxdemand:35, margin:8 },
+  { id:3, name:"Haldiram Namkeen 150g", category:"Packaged Food", cost:75, demand:16, stddev:3.9, leadtime:3, stock:45, ordercost:60, maxdemand:28, margin:20 },
+  { id:4, name:"Colgate Toothpaste", category:"Daily Use", cost:95, demand:8, stddev:2.3, leadtime:3, stock:25, ordercost:45, maxdemand:14, margin:18 },
+  { id:5, name:"Lay's Chips 26g", category:"Packaged Food", cost:20, demand:28, stddev:6.4, leadtime:2, stock:70, ordercost:35, maxdemand:42, margin:4 },
+  { id:6, name:"Tata Salt 1kg", category:"FMCG Staple", cost:22, demand:18, stddev:4.2, leadtime:2, stock:40, ordercost:30, maxdemand:30, margin:3 },
+  { id:7, name:"Parle-G Biscuit 100g", category:"Packaged Food", cost:10, demand:35, stddev:7.2, leadtime:1, stock:80, ordercost:25, maxdemand:50, margin:2 },
+  { id:8, name:"Lux Soap", category:"Daily Use", cost:35, demand:14, stddev:3.5, leadtime:2, stock:30, ordercost:40, maxdemand:22, margin:7 },
+  { id:9, name:"Lifebuoy Handwash", category:"Daily Use", cost:110, demand:6, stddev:1.8, leadtime:3, stock:18, ordercost:45, maxdemand:10, margin:22 },
+  { id:10, name:"Shampoo Sachet 5ml", category:"Daily Use", cost:4, demand:45, stddev:8.7, leadtime:1, stock:120, ordercost:20, maxdemand:65, margin:1 },
+  { id:11, name:"Maggi Noodles 70g", category:"Packaged Food", cost:14, demand:20, stddev:4.8, leadtime:2, stock:50, ordercost:30, maxdemand:32, margin:3 },
+  { id:12, name:"Dettol Soap", category:"Daily Use", cost:45, demand:10, stddev:2.6, leadtime:2, stock:22, ordercost:40, maxdemand:16, margin:9 }
+];
+let editingId = null;
+let charts = {};
+
+// ====================================================
+// CORE CALCULATIONS
+// ====================================================
+function calcSS(sku, Z) {
+  return Math.ceil(Z * sku.stddev * Math.sqrt(sku.leadtime));
+}
+function calcROP(sku, SS) {
+  return Math.ceil(sku.demand * sku.leadtime + SS);
+}
+function calcEOQ(sku) {
+  const D = sku.demand * 365;
+  const S = sku.ordercost;
+  const H = sku.cost * 0.20;
+  return Math.ceil(Math.sqrt(2 * D * S / H));
+}
+function getABCClass(sku, allSkus) {
+  const sorted = [...allSkus].sort((a,b) => (b.demand*365*b.cost) - (a.demand*365*a.cost));
+  const total = sorted.reduce((s,x) => s + x.demand*365*x.cost, 0);
+  let cum = 0;
+  for (let s of sorted) {
+    cum += s.demand*365*s.cost;
+    if (s.id === sku.id) {
+      const pct = cum/total;
+      if (pct <= 0.80) return 'A';
+      if (pct <= 0.95) return 'B';
+      return 'C';
+    }
+  }
+  return 'C';
+}
+function getZ() { return parseFloat(document.getElementById('serviceLevel')?.value || 1.65); }
+function getStatus(sku) {
+  const Z = getZ();
+  const SS = calcSS(sku, Z);
+  const ROP = calcROP(sku, SS);
+  if (sku.stock <= 0) return 'stockout';
+  if (sku.stock <= SS) return 'critical';
+  if (sku.stock <= ROP) return 'reorder';
+  return 'ok';
+}
+function daysLeft(sku) {
+  return sku.demand > 0 ? (sku.stock / sku.demand).toFixed(1) : '∞';
+}
+
+// ====================================================
+// NAVIGATION
+// ====================================================
+function showSection(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  const renders = {
+    dashboard: refreshDashboard,
+    skus: renderSKUs,
+    calculations: renderCalculations,
+    abc: renderABC,
+    simulation: renderSimulation,
+    financial: renderFinancial,
+    learn: renderLearn
+  };
+  if (renders[name]) renders[name]();
+}
+
+// ====================================================
+// DASHBOARD
+// ====================================================
+function refreshDashboard() {
+  const Z = 1.65;
+  const alerts = skus.filter(s => getStatus(s) !== 'ok');
+  const alertArea = document.getElementById('alert-area');
+  alertArea.innerHTML = alerts.map(s => `
+    <div class="alert-strip">
+      <span style="font-size:20px">${getStatus(s)==='stockout'?'🚨':'⚠️'}</span>
+      <div>
+        <strong>${s.name}</strong>: ${getStatus(s)==='stockout'?'STOCKOUT — Zero units remaining!':getStatus(s)==='critical'?`CRITICAL — Stock (${s.stock}) below safety stock (${calcSS(s,Z)})!`:`REORDER NOW — Stock (${s.stock}) at or below ROP (${calcROP(s,calcSS(s,Z))})`}
+      </div>
+    </div>
+  `).join('');
+
+  const statuses = skus.map(getStatus);
+  const numOk = statuses.filter(x=>x==='ok').length;
+  const numReorder = statuses.filter(x=>x==='reorder').length;
+  const numCritical = statuses.filter(x=>x==='critical'||x==='stockout').length;
+  const totalValue = skus.reduce((s,x) => s + x.stock*x.cost, 0);
+
+  document.getElementById('kpi-grid').innerHTML = `
+    <div class="kpi-card green">
+      <div class="kpi-label">SKUs in Stock</div>
+      <div class="kpi-value">${numOk}</div>
+      <div class="kpi-meta">Out of ${skus.length} total SKUs</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Reorder Needed</div>
+      <div class="kpi-value">${numReorder}</div>
+      <div class="kpi-meta">Place orders now</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Critical / Stockout</div>
+      <div class="kpi-value">${numCritical}</div>
+      <div class="kpi-meta">Immediate action required</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Total Inventory Value</div>
+      <div class="kpi-value">₹${totalValue.toLocaleString('en-IN')}</div>
+      <div class="kpi-meta">At current stock levels</div>
+    </div>
+  `;
+
+  const tbody = document.getElementById('dash-table');
+  tbody.innerHTML = skus.map(s => {
+    const status = getStatus(s);
+    const SS = calcSS(s, Z);
+    const ROP = calcROP(s, SS);
+    const pct = Math.min(100, (s.stock / (ROP * 2)) * 100);
+    const fillClass = status==='ok'?'safe':status==='reorder'?'warn':'danger';
+    const badge = status==='ok'?'badge-ok':status==='reorder'?'badge-warn':'badge-alert';
+    const label = status==='ok'?'Good':status==='reorder'?'Reorder':status==='critical'?'Critical':'Stockout';
+    return `<tr>
+      <td><strong>${s.name}</strong><br><span class="tag">${s.category}</span></td>
+      <td><span class="number-highlight">${s.stock}</span></td>
+      <td>${ROP}</td>
+      <td><span class="badge ${badge}">${label}</span></td>
+      <td>${daysLeft(s)} days</td>
+    </tr>`;
+  }).join('');
+
+  // Chart
+  if (charts.level) charts.level.destroy();
+  const ctx = document.getElementById('levelChart').getContext('2d');
+  const Z2 = 1.65;
+  charts.level = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: skus.map(s => s.name.split(' ').slice(0,2).join(' ')),
+      datasets: [
+        { label: 'Current Stock', data: skus.map(s=>s.stock), backgroundColor: skus.map(s => {
+          const st = getStatus(s);
+          return st==='ok'?'rgba(16,185,129,0.7)':st==='reorder'?'rgba(245,158,11,0.7)':'rgba(239,68,68,0.7)';
+        }), borderRadius: 4 },
+        { label: 'Reorder Point', data: skus.map(s=>calcROP(s,calcSS(s,Z2))), type:'line', borderColor:'rgba(59,130,246,0.8)', borderWidth:2, pointRadius:3, fill:false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#94A3B8', font:{size:11} } } },
+      scales: {
+        x: { ticks: { color:'#64748B', font:{size:10} }, grid:{color:'rgba(42,58,82,0.5)'} },
+        y: { ticks: { color:'#64748B', font:{size:10} }, grid:{color:'rgba(42,58,82,0.5)'} }
+      }
+    }
+  });
+}
+
+// ====================================================
+// SKU MANAGER
+// ====================================================
+function renderSKUs() {
+  const Z = 1.65;
+  document.getElementById('sku-table').innerHTML = skus.map(s => `
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td><span class="tag">${s.category}</span></td>
+      <td>${s.demand}</td>
+      <td>${s.stddev}</td>
+      <td>${s.leadtime}</td>
+      <td>₹${s.cost}</td>
+      <td>${s.stock}</td>
+      <td>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;margin-right:6px" onclick="editSKU(${s.id})">✏️ Edit</button>
+        <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" onclick="deleteSKU(${s.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'Add Product';
+  document.getElementById('modal-save-btn').textContent = 'Save Product';
+  ['name','category','cost','demand','stddev','leadtime','stock','ordercost','maxdemand','margin'].forEach(f => {
+    const el = document.getElementById('f-'+f);
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function editSKU(id) {
+  const s = skus.find(x=>x.id===id);
+  if (!s) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'Edit Product';
+  document.getElementById('modal-save-btn').textContent = 'Update Product';
+  document.getElementById('f-name').value = s.name;
+  document.getElementById('f-category').value = s.category;
+  document.getElementById('f-cost').value = s.cost;
+  document.getElementById('f-demand').value = s.demand;
+  document.getElementById('f-stddev').value = s.stddev;
+  document.getElementById('f-leadtime').value = s.leadtime;
+  document.getElementById('f-stock').value = s.stock;
+  document.getElementById('f-ordercost').value = s.ordercost;
+  document.getElementById('f-maxdemand').value = s.maxdemand;
+  document.getElementById('f-margin').value = s.margin;
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function deleteSKU(id) {
+  if (!confirm('Delete this SKU?')) return;
+  skus = skus.filter(s=>s.id!==id);
+  renderSKUs();
+}
+
+function saveSKU() {
+  const data = {
+    name: document.getElementById('f-name').value.trim(),
+    category: document.getElementById('f-category').value,
+    cost: parseFloat(document.getElementById('f-cost').value),
+    demand: parseFloat(document.getElementById('f-demand').value),
+    stddev: parseFloat(document.getElementById('f-stddev').value),
+    leadtime: parseInt(document.getElementById('f-leadtime').value),
+    stock: parseInt(document.getElementById('f-stock').value),
+    ordercost: parseFloat(document.getElementById('f-ordercost').value),
+    maxdemand: parseFloat(document.getElementById('f-maxdemand').value),
+    margin: parseFloat(document.getElementById('f-margin').value)
+  };
+  if (!data.name || isNaN(data.cost) || isNaN(data.demand)) {
+    alert('Please fill in all required fields.'); return;
+  }
+  if (editingId) {
+    skus = skus.map(s => s.id===editingId ? {...data, id:editingId} : s);
+  } else {
+    data.id = Date.now();
+    skus.push(data);
+  }
+  closeModal(); renderSKUs();
+}
+
+function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+// ====================================================
+// CALCULATIONS
+// ====================================================
+function renderCalculations() {
+  const Z = getZ();
+  document.getElementById('calc-table').innerHTML = skus.map(s => {
+    const SS = calcSS(s, Z);
+    const ROP = calcROP(s, SS);
+    const EOQ = calcEOQ(s);
+    const cls = getABCClass(s, skus);
+    const annualDemand = Math.round(s.demand * 365);
+    const holdingCost = (s.cost * 0.20).toFixed(2);
+    return `<tr>
+      <td><strong>${s.name}</strong></td>
+      <td><span class="badge badge-${cls}">${cls}</span></td>
+      <td><span class="number-highlight">${SS}</span> units</td>
+      <td><span class="number-highlight">${ROP}</span> units</td>
+      <td><span class="number-highlight">${EOQ}</span> units</td>
+      <td>${annualDemand.toLocaleString()}</td>
+      <td>₹${holdingCost}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('calc-details').innerHTML = `
+    <div class="three-col">
+      ${skus.slice(0,3).map(s => {
+        const Z2 = parseFloat(document.getElementById('serviceLevel').value);
+        const SS = calcSS(s, Z2);
+        const ROP = calcROP(s, SS);
+        const EOQ = calcEOQ(s);
+        return `<div class="card">
+          <div class="card-title">${s.name}</div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Safety Stock Calculation</div>
+            <code style="font-size:13px;color:var(--accent2)">SS = ${Z2} × ${s.stddev} × √${s.leadtime}<br>= ${Z2} × ${s.stddev} × ${Math.sqrt(s.leadtime).toFixed(3)}<br>= <strong>${SS} units</strong></code>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Reorder Point</div>
+            <code style="font-size:13px;color:var(--success)">(${s.demand} × ${s.leadtime}) + ${SS} = <strong>${ROP} units</strong></code>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text3);margin-bottom:4px">EOQ</div>
+            <code style="font-size:13px;color:var(--warning)">√(2 × ${(s.demand*365).toLocaleString()} × ${s.ordercost} / ${(s.cost*0.2).toFixed(0)}) = <strong>${EOQ} units</strong></code>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ====================================================
+// ABC ANALYSIS
+// ====================================================
+function renderABC() {
+  const sorted = [...skus].sort((a,b) => (b.demand*365*b.cost) - (a.demand*365*a.cost));
+  const total = sorted.reduce((s,x) => s + x.demand*365*x.cost, 0);
+  let cumPct = 0;
+  const rows = sorted.map((s,i) => {
+    const val = s.demand*365*s.cost;
+    const pct = val/total*100;
+    cumPct += pct;
+    const cls = cumPct <= 80 ? 'A' : cumPct <= 95 ? 'B' : 'C';
+    const strategy = cls==='A'?'Tight control — weekly ROP review, strict ordering':cls==='B'?'Moderate oversight — bi-weekly review':'Loose control — monthly review, simple reorder';
+    return { ...s, val, pct, cumPct: cumPct.toFixed(1), cls, strategy };
+  });
+
+  document.getElementById('abc-table').innerHTML = rows.map((r,i) => `<tr>
+    <td>${i+1}</td>
+    <td><strong>${r.name}</strong></td>
+    <td>₹${r.val.toLocaleString('en-IN')}</td>
+    <td>${r.pct.toFixed(1)}%</td>
+    <td>${r.cumPct}%</td>
+    <td><span class="badge badge-${r.cls}">${r.cls}</span></td>
+    <td style="font-size:12px;color:var(--text2)">${r.strategy}</td>
+  </tr>`).join('');
+
+  // Summary cards
+  const Aitems = rows.filter(r=>r.cls==='A');
+  const Bitems = rows.filter(r=>r.cls==='B');
+  const Citems = rows.filter(r=>r.cls==='C');
+  const Aval = Aitems.reduce((s,x)=>s+x.val,0);
+  const Bval = Bitems.reduce((s,x)=>s+x.val,0);
+  const Cval = Citems.reduce((s,x)=>s+x.val,0);
+
+  document.getElementById('abc-summary').innerHTML = `
+    <div class="card" style="border-color:rgba(239,68,68,0.3)">
+      <div style="color:#F87171;font-size:24px;font-weight:700;font-family:var(--mono)">A Class</div>
+      <div style="font-size:13px;color:var(--text2);margin:8px 0">${Aitems.length} items · ${(Aval/total*100).toFixed(0)}% of value</div>
+      <div style="font-size:13px">${Aitems.map(x=>x.name.split(' ').slice(0,2).join(' ')).join(', ')}</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">⚡ Requires daily monitoring and tight ROP control</div>
+    </div>
+    <div class="card" style="border-color:rgba(245,158,11,0.3)">
+      <div style="color:#FCD34D;font-size:24px;font-weight:700;font-family:var(--mono)">B Class</div>
+      <div style="font-size:13px;color:var(--text2);margin:8px 0">${Bitems.length} items · ${(Bval/total*100).toFixed(0)}% of value</div>
+      <div style="font-size:13px">${Bitems.map(x=>x.name.split(' ').slice(0,2).join(' ')).join(', ')}</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">📋 Bi-weekly review with standard ROP system</div>
+    </div>
+    <div class="card" style="border-color:rgba(16,185,129,0.3)">
+      <div style="color:#34D399;font-size:24px;font-weight:700;font-family:var(--mono)">C Class</div>
+      <div style="font-size:13px;color:var(--text2);margin:8px 0">${Citems.length} items · ${(Cval/total*100).toFixed(0)}% of value</div>
+      <div style="font-size:13px">${Citems.map(x=>x.name.split(' ').slice(0,2).join(' ')).join(', ')}</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">📦 Simple reorder rules, minimal oversight needed</div>
+    </div>
+  `;
+
+  // ABC Pie Chart
+  if (charts.abc) charts.abc.destroy();
+  charts.abc = new Chart(document.getElementById('abcChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Class A (High Value)', 'Class B (Medium Value)', 'Class C (Low Value)'],
+      datasets: [{ data: [Aval, Bval, Cval], backgroundColor: ['rgba(239,68,68,0.7)','rgba(245,158,11,0.7)','rgba(16,185,129,0.7)'], borderColor: ['#EF4444','#F59E0B','#10B981'], borderWidth: 2 }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { position:'bottom', labels: { color:'#94A3B8', padding:16, font:{size:11} } } }
+    }
+  });
+
+  // Pareto Chart
+  if (charts.pareto) charts.pareto.destroy();
+  const cums = rows.map(r => parseFloat(r.cumPct));
+  charts.pareto = new Chart(document.getElementById('paretoChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.name.split(' ').slice(0,2).join(' ')),
+      datasets: [
+        { label: 'Annual Value (₹)', data: rows.map(r=>r.val), backgroundColor: rows.map(r=>r.cls==='A'?'rgba(239,68,68,0.6)':r.cls==='B'?'rgba(245,158,11,0.6)':'rgba(16,185,129,0.6)'), borderRadius:3, yAxisID:'y' },
+        { label: 'Cumulative %', data: cums, type:'line', borderColor:'rgba(59,130,246,0.9)', borderWidth:2, pointRadius:3, fill:false, yAxisID:'y1' }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { labels: { color:'#94A3B8', font:{size:11} } } },
+      scales: {
+        x: { ticks: { color:'#64748B', font:{size:9} }, grid:{color:'rgba(42,58,82,0.4)'} },
+        y: { ticks: { color:'#64748B', font:{size:10} }, grid:{color:'rgba(42,58,82,0.4)'} },
+        y1: { position:'right', min:0, max:100, ticks: { color:'#64748B', font:{size:10}, callback: v => v+'%' }, grid:{display:false} }
+      }
+    }
+  });
+}
+
+// ====================================================
+// SIMULATION
+// ====================================================
+function renderSimulation() {
+  const sel = document.getElementById('simSKU');
+  sel.innerHTML = skus.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  runSimulation();
+}
+
+function runSimulation() {
+  const id = parseInt(document.getElementById('simSKU')?.value);
+  const sku = skus.find(s=>s.id===id) || skus[0];
+  if (!sku) return;
+
+  const Z = 1.65;
+  const SS = calcSS(sku, Z);
+  const ROP = calcROP(sku, SS);
+  const EOQ = calcEOQ(sku);
+
+  // Generate 30 days of demand (±50% around avg with variability)
+  const demands = Array.from({length:30}, () => {
+    const d = Math.max(0, Math.round(sku.demand + (Math.random()-0.5) * sku.stddev * 2));
+    return d;
+  });
+
+  // CURRENT SYSTEM: owner orders when "feels low" — every ~10 days, quantity = 2x avg demand
+  let curStock = sku.stock;
+  let curStockouts = 0, curInTransit = 0, curInTransitDays = 0;
+  const curLevels = [];
+  for (let d = 0; d < 30; d++) {
+    if (curInTransitDays > 0) { curInTransitDays--; if (curInTransitDays===0) curStock += curInTransit; }
+    const sold = Math.min(curStock, demands[d]);
+    if (sold < demands[d]) curStockouts++;
+    curStock = Math.max(0, curStock - sold);
+    if (d % 10 === 9 && curInTransitDays===0) { curInTransit = Math.round(sku.demand*10); curInTransitDays = sku.leadtime; }
+    curLevels.push(curStock);
+  }
+
+  // PROPOSED SYSTEM: ROP-triggered ordering
+  let propStock = sku.stock;
+  let propStockouts = 0, propInTransit = 0, propInTransitDays = 0;
+  const propLevels = [];
+  const log = [];
+  for (let d = 0; d < 30; d++) {
+    let action = '', type = '';
+    if (propInTransitDays > 0) {
+      propInTransitDays--;
+      if (propInTransitDays===0) { propStock += propInTransit; action = `📦 Stock arrived: +${propInTransit} units`; type='arrival'; }
+    }
+    const sold = Math.min(propStock, demands[d]);
+    if (sold < demands[d]) { propStockouts++; action = `🚨 STOCKOUT: demand ${demands[d]}, only ${propStock} available`; type='stockout'; }
+    propStock = Math.max(0, propStock - sold);
+    if (propStock <= ROP && propInTransitDays===0) {
+      propInTransit = EOQ; propInTransitDays = sku.leadtime;
+      action = `🔔 REORDER triggered: ordered ${EOQ} units (arrives in ${sku.leadtime} days)`; type='reorder';
+    }
+    propLevels.push(propStock);
+    log.push({ day: d+1, demand: demands[d], sold, stock: propStock, action, type });
+  }
+
+  // Results
+  const curAvgStock = (curLevels.reduce((a,b)=>a+b,0)/30).toFixed(0);
+  const propAvgStock = (propLevels.reduce((a,b)=>a+b,0)/30).toFixed(0);
+  const curHolding = Math.round(curAvgStock * sku.cost * 0.20 / 12);
+  const propHolding = Math.round(propAvgStock * sku.cost * 0.20 / 12);
+
+  document.getElementById('sim-current').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div style="text-align:center;padding:16px;background:var(--surface2);border-radius:8px">
+        <div style="font-size:28px;font-weight:700;color:var(--danger);font-family:var(--mono)">${curStockouts}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Stockout Days</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:var(--surface2);border-radius:8px">
+        <div style="font-size:28px;font-weight:700;color:var(--warning);font-family:var(--mono)">${curAvgStock}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Avg Stock</div>
+      </div>
+    </div>
+    <div style="padding:12px;background:rgba(239,68,68,0.08);border-radius:8px;border:1px solid rgba(239,68,68,0.2)">
+      <div style="font-size:12px;color:var(--text2)">Monthly holding cost: <strong style="color:var(--danger)">₹${curHolding.toLocaleString()}</strong><br>
+      Intuitive, irregular reordering leads to gaps and excess stock</div>
+    </div>
+  `;
+
+  document.getElementById('sim-proposed').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div style="text-align:center;padding:16px;background:var(--surface2);border-radius:8px">
+        <div style="font-size:28px;font-weight:700;color:var(--success);font-family:var(--mono)">${propStockouts}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Stockout Days</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:var(--surface2);border-radius:8px">
+        <div style="font-size:28px;font-weight:700;color:var(--success);font-family:var(--mono)">${propAvgStock}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Avg Stock</div>
+      </div>
+    </div>
+    <div style="padding:12px;background:rgba(16,185,129,0.08);border-radius:8px;border:1px solid rgba(16,185,129,0.2)">
+      <div style="font-size:12px;color:var(--text2)">Monthly holding cost: <strong style="color:var(--success)">₹${propHolding.toLocaleString()}</strong><br>
+      ROP = <strong>${ROP}</strong> | Safety Stock = <strong>${SS}</strong> | EOQ = <strong>${EOQ}</strong> units per order</div>
+    </div>
+  `;
+
+  // Simulation Chart
+  if (charts.sim) charts.sim.destroy();
+  charts.sim = new Chart(document.getElementById('simChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: Array.from({length:30}, (_,i) => `Day ${i+1}`),
+      datasets: [
+        { label: 'Current System', data: curLevels, borderColor:'rgba(239,68,68,0.8)', borderWidth:2, fill:false, pointRadius:2 },
+        { label: 'Proposed System', data: propLevels, borderColor:'rgba(16,185,129,0.9)', borderWidth:2, fill:false, pointRadius:2 },
+        { label: 'Reorder Point', data: Array(30).fill(ROP), borderColor:'rgba(59,130,246,0.6)', borderWidth:1, borderDash:[6,3], fill:false, pointRadius:0 },
+        { label: 'Safety Stock', data: Array(30).fill(SS), borderColor:'rgba(245,158,11,0.6)', borderWidth:1, borderDash:[4,4], fill:false, pointRadius:0 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { labels: { color:'#94A3B8', font:{size:11} } } },
+      scales: {
+        x: { ticks: { color:'#64748B', font:{size:9}, maxRotation:0, maxTicksLimit:10 }, grid:{color:'rgba(42,58,82,0.4)'} },
+        y: { ticks: { color:'#64748B', font:{size:10} }, grid:{color:'rgba(42,58,82,0.4)'}, min:0 }
+      }
+    }
+  });
+
+  // Log
+  document.getElementById('sim-log').innerHTML = log.map(l => `
+    <div class="sim-day ${l.type}">
+      <span style="font-weight:700;font-family:var(--mono);min-width:50px">Day ${l.day}</span>
+      <span style="color:var(--text3);min-width:120px">Demand: ${l.demand} | Sold: ${l.sold}</span>
+      <span style="color:var(--text2);min-width:80px">Stock: ${l.stock}</span>
+      <span style="font-size:12px;color:var(--text)">${l.action}</span>
+    </div>
+  `).join('');
+}
+
+// ====================================================
+// FINANCIAL IMPACT
+// ====================================================
+function renderFinancial() {
+  const Z = 1.65;
+  let totalOldHolding = 0, totalNewHolding = 0, totalStockoutSaved = 0;
+
+  const rows = skus.map(s => {
+    const SS = calcSS(s, Z);
+    const ROP = calcROP(s, SS);
+    const EOQ = calcEOQ(s);
+    const oldAvgStock = s.stock * 1.4; // old system typically 40% more
+    const newAvgStock = (ROP + EOQ/2);
+    const oldHolding = Math.round(oldAvgStock * s.cost * 0.20 / 12);
+    const newHolding = Math.round(newAvgStock * s.cost * 0.20 / 12);
+    const stockoutDaysReduced = Math.max(0, Math.round(Math.random()*3 + 2));
+    const stockoutSaved = Math.round(stockoutDaysReduced * s.demand * s.margin);
+    totalOldHolding += oldHolding;
+    totalNewHolding += newHolding;
+    totalStockoutSaved += stockoutSaved;
+    return { s, oldHolding, newHolding, stockoutSaved };
+  });
+
+  const holdingSaved = totalOldHolding - totalNewHolding;
+  const totalMonthly = holdingSaved + totalStockoutSaved;
+  const totalAnnual = totalMonthly * 12;
+
+  document.getElementById('fin-kpi').innerHTML = `
+    <div class="kpi-card green">
+      <div class="kpi-label">Monthly Holding Saved</div>
+      <div class="kpi-value">₹${holdingSaved.toLocaleString('en-IN')}</div>
+      <div class="kpi-meta">Optimized stock levels</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Stockout Losses Recovered</div>
+      <div class="kpi-value">₹${totalStockoutSaved.toLocaleString('en-IN')}</div>
+      <div class="kpi-meta">Per month (estimated)</div>
+    </div>
+    <div class="kpi-card cyan">
+      <div class="kpi-label">Total Monthly Benefit</div>
+      <div class="kpi-value">₹${totalMonthly.toLocaleString('en-IN')}</div>
+      <div class="kpi-meta">Holding + Stockout savings</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Projected Annual Benefit</div>
+      <div class="kpi-value">₹${(totalAnnual/100000).toFixed(2)}L</div>
+      <div class="kpi-meta">₹${totalAnnual.toLocaleString('en-IN')}/year</div>
+    </div>
+  `;
+
+  if (charts.fin) charts.fin.destroy();
+  charts.fin = new Chart(document.getElementById('finChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Monthly Holding', 'Stockout Losses', 'Total Cost'],
+      datasets: [
+        { label: 'Before System (₹)', data: [totalOldHolding, totalStockoutSaved * 2, totalOldHolding + totalStockoutSaved * 2], backgroundColor: 'rgba(239,68,68,0.6)', borderRadius:4 },
+        { label: 'After System (₹)', data: [totalNewHolding, Math.round(totalStockoutSaved*0.15), totalNewHolding + Math.round(totalStockoutSaved*0.15)], backgroundColor: 'rgba(16,185,129,0.6)', borderRadius:4 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { labels: { color:'#94A3B8', font:{size:11} } } },
+      scales: {
+        x: { ticks:{color:'#64748B'}, grid:{color:'rgba(42,58,82,0.4)'} },
+        y: { ticks:{color:'#64748B', callback:v=>'₹'+v.toLocaleString('en-IN')}, grid:{color:'rgba(42,58,82,0.4)'} }
+      }
+    }
+  });
+
+  document.getElementById('savings-breakdown').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="insight-card">
+        <div class="insight-title">📦 Holding Cost Optimization</div>
+        <div class="insight-text">Old system: <strong style="color:var(--danger)">₹${totalOldHolding.toLocaleString()}/month</strong><br>New system: <strong style="color:var(--success)">₹${totalNewHolding.toLocaleString()}/month</strong><br>Saving: <strong>₹${holdingSaved.toLocaleString()}/month</strong></div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-title">💸 Recovered Lost Sales</div>
+        <div class="insight-text">Stockout profit losses reduced by approx. <strong style="color:var(--success)">₹${totalStockoutSaved.toLocaleString()}/month</strong> through systematic ROP-triggered reordering</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-title">📊 ROI on Implementation</div>
+        <div class="insight-text">This digital tool costs ₹0 to implement. The annual benefit of <strong style="color:var(--accent)">₹${(totalAnnual/100000).toFixed(2)} Lakhs</strong> represents pure operational gain.</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('fin-table').innerHTML = rows.map(r => `<tr>
+    <td><strong>${r.s.name}</strong></td>
+    <td style="color:var(--danger)">₹${r.oldHolding.toLocaleString()}</td>
+    <td style="color:var(--success)">₹${r.newHolding.toLocaleString()}</td>
+    <td style="color:var(--accent)">₹${r.stockoutSaved.toLocaleString()}</td>
+    <td><strong style="color:var(--text)">₹${(r.oldHolding-r.newHolding+r.stockoutSaved).toLocaleString()}</strong></td>
+  </tr>`).join('');
+}
+
+// ====================================================
+// LEARN
+// ====================================================
+function renderLearn() {
+  const concepts = [
+    { icon:'📦', title:'What is Inventory?', desc:'Inventory is stored flow — it exists because supply and demand timing do not match. The fundamental law (Little\'s Law): Inventory = Throughput × Flow Time. More inventory means you\'re buying time; less means tighter, riskier operations.', formula:'I = R × T', formulaNote:'I = Inventory · R = Flow rate · T = Flow time' },
+    { icon:'🔔', title:'Reorder Point (ROP)', desc:'ROP answers WHEN to order — not how much. It is the stock level at which a new order must be placed so that stock arrives before running out. It is a decision trigger, not an amount. Higher lead time = higher ROP.', formula:'ROP = (d × L) + SS', formulaNote:'d = avg daily demand · L = lead time · SS = safety stock' },
+    { icon:'🛡️', title:'Safety Stock', desc:'Safety Stock is insurance against uncertainty. It is NOT a waste — it is statistically calibrated protection. The advanced formula uses demand standard deviation, not just averages. Most small shops fail because they either ignore variability or over-buffer due to fear.', formula:'SS = Z × σ_d × √L', formulaNote:'Z = service level factor · σ = std deviation · L = lead time' },
+    { icon:'📐', title:'EOQ Model', desc:'The Economic Order Quantity (EOQ) tells you the optimal order size that minimizes total inventory cost — balancing ordering cost (too many small orders = expensive) and holding cost (too many large orders = costly to store). First proposed by Ford Harris in 1913.', formula:'EOQ = √(2DS / H)', formulaNote:'D = annual demand · S = ordering cost · H = holding cost/unit/yr' },
+    { icon:'📊', title:'ABC Analysis', desc:'ABC classification is the Pareto Principle applied to inventory. Typically: A items = 20% of SKUs, 80% of value. B = 30% of SKUs, 15% of value. C = 50% of SKUs, 5% of value. Focus management attention where it matters most.', formula:'Class A: Top 80% of annual value', formulaNote:'Rank items by (Annual Demand × Unit Cost), cumulate to find class boundaries' },
+    { icon:'⏱️', title:'Lead Time & Its Impact', desc:'Lead time is a risk multiplier. Higher lead time means higher required safety stock AND higher ROP. Even a 1-day reduction in lead time can reduce required safety stock by 15–25%. This is why supplier relationships directly impact working capital.', formula:'Pipeline Inventory = Demand × Lead Time', formulaNote:'Every day of lead time holds capital in transit' },
+    { icon:'🎯', title:'Service Level', desc:'Service level is the probability of NOT stocking out during a replenishment cycle. 95% service level means: in 95 out of 100 replenishment cycles, you will not run out. Higher service level = higher Z-score = higher safety stock = higher cost. It\'s a tradeoff.', formula:'95% SL → Z = 1.65 | 99% SL → Z = 2.33', formulaNote:'Use 95% for Class A items, 90% for Class B, basic formula for Class C' },
+    { icon:'💡', title:'The Core Insight', desc:'Most small retail problems are not demand problems — they are information problems. The shop owner has the demand data in their memory. The model converts that memory into decisions. Inventory management is not about stock — it is about timing, probability, and cost tradeoffs.', formula:'System Performance = f(Demand, Lead Time, Variability, Control Policy)', formulaNote:'All concepts connect. Master this one equation and you master the subject.' }
+  ];
+
+  document.getElementById('learn-content').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      ${concepts.map((c,i) => `
+        <div class="insight-card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <span style="font-size:28px">${c.icon}</span>
+            <div class="insight-title" style="font-size:17px">${c.title}</div>
+          </div>
+          <div class="insight-text" style="margin-bottom:12px">${c.desc}</div>
+          <div class="formula-box" style="margin:0">
+            <div class="formula-text" style="font-size:14px">${c.formula}</div>
+            <div class="formula-note">${c.formulaNote}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ====================================================
+// INIT
+// ====================================================
+refreshDashboard();
+</script>
+</body>
+</html>

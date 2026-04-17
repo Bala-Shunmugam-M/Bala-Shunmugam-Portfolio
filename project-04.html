@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Inventory Optimisation — EOQ Model — Bala Shunmugam M</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+  :root {
+    --ink:#0f1117;--ink-2:#1c2030;--ink-3:#2a2f40;--steel:#3a4055;
+    --muted:#6b7280;--ghost:#9aa0ae;--rule:#2a2f40;--rule-light:#333849;
+    --amber:#f59e0b;--amber-dim:#92600a;--amber-glow:rgba(245,158,11,0.12);--amber-ring:rgba(245,158,11,0.25);
+    --teal:#14b8a6;--teal-dim:rgba(20,184,166,0.12);
+    --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.12);
+    --rose:#f43f5e;--rose-dim:rgba(244,63,94,0.12);
+    --violet:#8b5cf6;--violet-dim:rgba(139,92,246,0.12);
+    --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+    --orange:#f97316;--orange-dim:rgba(249,115,22,0.12);
+    --surface:#161b27;--surface-2:#1d2235;--surface-3:#222840;
+    --text:#e2e5ef;--text-2:#b0b8cc;--text-3:#6b7280;
+    --font-serif:'DM Serif Display',Georgia,serif;
+    --font-sans:'DM Sans',system-ui,sans-serif;
+    --font-mono:'DM Mono',monospace;
+    --r-sm:6px;--r-md:10px;--r-lg:16px;--r-xl:24px;
+    --accent:#14b8a6;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-sans);background:var(--ink);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+  a{text-decoration:none;color:inherit;}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(15,17,23,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+  .nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ghost);transition:color .15s;}
+  .nav-back:hover{color:var(--amber);}
+  .nav-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+  .nav-right{display:flex;align-items:center;gap:12px;}
+  .nav-label{font-size:12px;font-family:var(--font-mono);color:var(--text-3);}
+  .nav-badge{font-size:11px;font-family:var(--font-mono);color:var(--accent);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);padding:2px 8px;border-radius:100px;}
+
+  /* HERO */
+  .hero{padding:64px 32px 48px;max-width:1100px;margin:0 auto;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;top:-120px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(245,158,11,0.06) 0%,transparent 70%);pointer-events:none;}
+  .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+  .eyebrow-line{width:32px;height:1px;background:var(--accent);}
+  .eyebrow-text{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;}
+  .hero-title{font-family:var(--font-serif);font-size:clamp(28px,4vw,52px);font-weight:400;color:var(--text);line-height:1.1;letter-spacing:-1px;margin-bottom:20px;max-width:800px;}
+  .hero-desc{font-size:15px;color:var(--text-2);max-width:660px;line-height:1.8;margin-bottom:32px;}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;}
+  .hero-chip{font-family:var(--font-mono);font-size:11px;padding:4px 12px;border-radius:100px;border:1px solid var(--rule-light);color:var(--text-3);background:var(--surface-2);}
+  .hero-chip.accent{color:var(--accent);border-color:rgba(245,158,11,0.3);background:var(--amber-glow);}
+
+  /* IMPACT ROW */
+  .impact-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--rule);}
+  .impact-card{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px 20px;min-width:120px;}
+  .impact-val{font-family:var(--font-mono);font-size:24px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:4px;}
+  .impact-label{font-size:11px;color:var(--text-3);line-height:1.3;}
+
+  /* CONTENT AREA */
+  .content{max-width:1100px;margin:0 auto;padding:0 32px 80px;}
+  .section-block{margin-bottom:48px;}
+  .section-title{font-family:var(--font-serif);font-size:26px;font-weight:400;color:var(--text);margin-bottom:20px;letter-spacing:-.5px;padding-bottom:12px;border-bottom:1px solid var(--rule);}
+  .section-sub{font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .prose{font-size:14px;color:var(--text-2);line-height:1.85;margin-bottom:16px;}
+  .prose strong{color:var(--text);}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--rule);margin-bottom:24px;flex-wrap:wrap;}
+  .tab{font-family:var(--font-mono);font-size:11px;padding:10px 16px;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;letter-spacing:.04em;text-transform:uppercase;}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab:hover{color:var(--text-2);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* PASI GRID */
+  .pasi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+  .pasi-cell{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;border-left:3px solid var(--cell-color,var(--amber));}
+  .pasi-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;font-weight:500;}
+  .pasi-text{font-size:13px;color:var(--text-2);line-height:1.75;}
+  .pasi-text strong{color:var(--text);}
+
+  /* TABLE */
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .data-table th{background:var(--surface-3);color:var(--text-3);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px;text-align:left;border-bottom:1px solid var(--rule);font-weight:500;}
+  .data-table td{padding:10px 12px;border-bottom:1px solid var(--rule);color:var(--text-2);vertical-align:top;}
+  .data-table tr:hover td{background:var(--surface-2);}
+  .table-wrap{overflow-x:auto;margin-bottom:24px;border:1px solid var(--rule);border-radius:var(--r-md);}
+
+  /* METRICS */
+  .metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+  .metric-box{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px 20px;}
+  .metric-name{font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
+  .metric-num{font-family:var(--font-mono);font-size:28px;font-weight:500;color:var(--text);line-height:1;margin-bottom:4px;}
+  .metric-unit{font-size:11px;color:var(--text-3);}
+
+  /* BAR CHART */
+  .bar-chart{margin-bottom:24px;}
+  .bar-chart h4{font-size:12px;color:var(--text-3);margin-bottom:14px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .bar-label{font-size:12px;color:var(--text-2);width:160px;flex-shrink:0;}
+  .bar-track{flex:1;background:var(--surface-3);border-radius:4px;height:8px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;}
+  .bar-val{font-family:var(--font-mono);font-size:11px;color:var(--text-3);width:50px;text-align:right;flex-shrink:0;}
+
+  /* FINDINGS */
+  .findings{display:flex;flex-direction:column;gap:12px;}
+  .finding{display:flex;gap:14px;background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-md);padding:16px;}
+  .finding-num{font-family:var(--font-mono);font-size:13px;color:var(--accent);font-weight:500;flex-shrink:0;width:20px;}
+  .finding-text{font-size:13px;color:var(--text-2);line-height:1.75;}
+  .finding-text strong{color:var(--text);}
+
+  /* SWOT */
+  .swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+  .swot-cell{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;}
+  .swot-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:500;}
+  .swot-item{font-size:12px;color:var(--text-2);padding:5px 0;border-bottom:1px solid var(--rule);line-height:1.5;}
+  .swot-item:last-child{border-bottom:none;}
+
+  /* ROADMAP / RECS */
+  .rec-list{display:flex;flex-direction:column;gap:10px;}
+  .rec-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-md);padding:14px 16px;}
+  .rec-horizon{font-family:var(--font-mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em;}
+  .rec-short{background:rgba(34,197,94,.15);color:var(--green);}
+  .rec-medium{background:rgba(245,158,11,.15);color:var(--amber);}
+  .rec-long{background:rgba(59,130,246,.15);color:var(--blue);}
+  .rec-text{font-size:13px;color:var(--text-2);line-height:1.7;}
+  .rec-text strong{color:var(--text);}
+
+  /* TOOL EMBED */
+  .tool-embed{width:100%;border:none;border-radius:var(--r-xl);overflow:hidden;background:var(--surface);min-height:85vh;display:block;}
+
+  /* FOOTER */
+  .page-footer{background:var(--surface);border-top:1px solid var(--rule);padding:32px;text-align:center;font-size:13px;color:var(--text-3);}
+  .page-footer a{color:var(--amber);}
+
+  /* RESPONSIVE */
+  @media(max-width:720px){
+    .hero,.content{padding-left:20px;padding-right:20px;}
+    .pasi-grid,.swot-grid,.metrics-grid{grid-template-columns:1fr;}
+    .hero-title{font-size:26px;}
+    .nav{padding:0 20px;}
+  }
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-track{background:var(--ink);}
+  ::-webkit-scrollbar-thumb{background:var(--rule-light);border-radius:3px;}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="projects.html" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    ← All Projects
+  </a>
+  <div class="nav-right">
+    <span class="nav-label">Bala Shunmugam M</span>
+    <span class="nav-badge">04 / 07</span>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text">MBA · Operations Management · Inventory Study</div></div>
+  <h1 class="hero-title">Inventory Optimisation Using the EOQ Model</h1>
+  <p class="hero-desc">Applied the Economic Order Quantity model to resolve a dual-failure mode in raw material procurement — excess holding cost eroding margins while simultaneous stockouts caused production stoppages. Calculated the optimal order quantity, reorder point, and safety stock from first principles and quantified the financial impact.</p>
+  <div class="hero-chips">
+    <span class="hero-chip accent">MBA · Operations Management</span>
+    <span class="hero-chip">EOQ Model</span>
+    <span class="hero-chip">Reorder Point</span>
+    <span class="hero-chip">Safety Stock</span>
+    <span class="hero-chip">Total Cost Minimisation</span>
+  </div>
+  <div class="impact-row">
+    <div class="impact-card"><div class="impact-val">18%</div><div class="impact-label">Reduction in annual holding cost</div></div>
+    <div class="impact-card"><div class="impact-val">Q* = √(2DS/H)</div><div class="impact-label">EOQ formula applied</div></div>
+    <div class="impact-card"><div class="impact-val">Eliminated</div><div class="impact-label">Stockout frequency</div></div>
+    <div class="impact-card"><div class="impact-val">ROP + SS</div><div class="impact-label">Science-based reorder trigger</div></div>
+  </div>
+</section>
+
+<div class="content">
+  <div class="section-block">
+    <div class="section-sub">EOQ Model — Full Derivation &amp; Application</div>
+    <div class="section-title">From Dual-Failure to Optimal Control</div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'p4-pasi')">P → A → S → I</div>
+      <div class="tab" onclick="switchTab(this,'p4-model')">Model &amp; Formula</div>
+      <div class="tab" onclick="switchTab(this,'p4-findings')">Key Insights</div>
+    </div>
+
+    <div id="p4-pasi" class="tab-panel active">
+      <div class="pasi-grid">
+        <div class="pasi-cell" style="--cell-color:var(--rose)">
+          <div class="pasi-label" style="color:var(--rose)">Problem</div>
+          <div class="pasi-text">Classic over-order / under-order cycle: excess inventory holding cost eating into margins, while simultaneous stockouts caused production stoppages. Neither pure over-stocking nor under-stocking was sustainable. Decision-making was ad-hoc and intuition-based.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--blue)">
+          <div class="pasi-label" style="color:var(--blue)">Analysis</div>
+          <div class="pasi-text">Collected annual demand (D), ordering cost (S), and holding cost (H). Plotted total cost curve — sum of ordering cost (decreasing in Q) and holding cost (increasing in Q) — against order quantity to find the global minimum, the EOQ inflection point.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--amber)">
+          <div class="pasi-label" style="color:var(--amber)">Solution</div>
+          <div class="pasi-text"><strong>Q* = √(2DS/H)</strong> — optimal order quantity minimising total annual inventory cost. ROP = (Average daily demand × Lead time) + Safety Stock. SS = Z × σ_d × √L, calibrated to desired service level.</div>
+        </div>
+        <div class="pasi-cell" style="--cell-color:var(--green)">
+          <div class="pasi-label" style="color:var(--green)">Impact</div>
+          <div class="pasi-text"><strong>18% estimated reduction</strong> in annual holding cost. Stockout frequency effectively eliminated by science-based reorder level and safety stock buffer. Total cost curve demonstrates optimality — any deviation from Q* increases total cost.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="p4-model" class="tab-panel">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Parameter</th><th>Symbol</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Annual Demand</strong></td><td>D</td><td>Total units required per year — from historical demand data</td></tr>
+            <tr><td><strong>Ordering Cost</strong></td><td>S</td><td>Fixed cost per order placed (admin, transport, receiving) — decreasing returns to ordering frequency</td></tr>
+            <tr><td><strong>Holding Cost</strong></td><td>H</td><td>Cost to hold one unit for one year (storage, capital, insurance, obsolescence) — increasing in order quantity</td></tr>
+            <tr><td><strong>Optimal Order Qty</strong></td><td>Q* = √(2DS/H)</td><td>Quantity that minimises sum of ordering + holding cost — the EOQ</td></tr>
+            <tr><td><strong>Lead Time</strong></td><td>L</td><td>Days from order placement to receipt — determines how early to order</td></tr>
+            <tr><td><strong>Demand Std Dev</strong></td><td>σ_d</td><td>Variability in daily demand — drives safety stock requirement</td></tr>
+            <tr><td><strong>Service Level Factor</strong></td><td>Z</td><td>Z = 1.65 (95%), 1.28 (90%), 1.04 (85%) — chosen based on criticality</td></tr>
+            <tr><td><strong>Safety Stock</strong></td><td>SS = Z × σ_d × √L</td><td>Statistical buffer against demand variability during lead time</td></tr>
+            <tr><td><strong>Reorder Point</strong></td><td>ROP = (d̄ × L) + SS</td><td>Inventory level that triggers a new order placement</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bar-chart">
+        <h4>EOQ total cost curve — cost components vs order quantity</h4>
+        <div class="bar-row"><div class="bar-label">Ordering cost (small Q)</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--rose)"></div></div><div class="bar-val">High</div></div>
+        <div class="bar-row"><div class="bar-label">Ordering cost (at Q*)</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--amber)"></div></div><div class="bar-val">Optimal</div></div>
+        <div class="bar-row"><div class="bar-label">Holding cost (at Q*)</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--teal)"></div></div><div class="bar-val">Optimal</div></div>
+        <div class="bar-row"><div class="bar-label">Holding cost (large Q)</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--blue)"></div></div><div class="bar-val">High</div></div>
+        <div class="bar-row"><div class="bar-label">Total cost at Q* (minimum)</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--green)"></div></div><div class="bar-val">Minimum</div></div>
+      </div>
+    </div>
+
+    <div id="p4-findings" class="tab-panel">
+      <div class="findings">
+        <div class="finding"><div class="finding-num">1</div><div class="finding-text"><strong>At Q*, ordering cost = holding cost.</strong> This is the mathematical proof of EOQ optimality — the two cost functions are equal at the minimum of the total cost curve. Any intuition-based quantity that deviates from this equilibrium necessarily increases total cost.</div></div>
+        <div class="finding"><div class="finding-num">2</div><div class="finding-text"><strong>The EOQ is robust to estimation error.</strong> Because the total cost curve is relatively flat near Q*, a 20% error in demand estimation produces only ~2% error in total cost. This makes the model practically useful even when historical data is imperfect.</div></div>
+        <div class="finding"><div class="finding-num">3</div><div class="finding-text"><strong>Safety stock is driven by variability, not volume.</strong> A high-volume item with stable demand may need less safety stock than a lower-volume item with erratic demand. The Z × σ_d × √L formula captures this correctly — intuition-based ordering typically gets this backwards.</div></div>
+        <div class="finding"><div class="finding-num">4</div><div class="finding-text"><strong>Lead time reduction compounds the benefit.</strong> Halving lead time L reduces both the ROP (less time at risk) and the safety stock requirement (SS ∝ √L). Supplier negotiations for faster delivery have direct, calculable inventory cost benefits.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer class="page-footer">
+  <p>Bala Shunmugam M · MBA Operations · <a href="projects.html">← All Projects</a> · <a href="index.html">Portfolio</a></p>
+</footer>
+
+<script>
+function switchTab(el, panelId) {
+  const container = el.closest('.tabs').parentElement;
+  container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const panel = container.querySelector('#' + panelId);
+  if (panel) panel.classList.add('active');
+}
+</script>
+</body>
+</html>
